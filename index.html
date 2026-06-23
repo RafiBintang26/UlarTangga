@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ular Tangga Sejarah Indonesia</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --merah: #C0392B;
+    --merah-dark: #922B21;
+    --merah-light: #FADBD8;
+    --putih: #FDFAF6;
+    --emas: #B7860B;
+    --emas-light: #FEF9E7;
+    --emas-bright: #F4D03F;
+    --hijau: #1A7A4A;
+    --hijau-light: #D5F5E3;
+    --biru: #1A5276;
+    --biru-light: #D6EAF8;
+    --teks: #1C1C1C;
+    --teks-muted: #5D5D5D;
+    --border: #E0D8CC;
+    --bg-card: #FFFDF8;
+    --cell-a: #FEF5E7;
+    --cell-b: #FDFAF6;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--putih);
+    color: var(--teks);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--merah-dark) 0%, var(--merah) 60%, #E74C3C 100%);
+    color: #fff;
+    padding: 20px 24px 16px;
+    text-align: center;
+    position: relative;
+    border-bottom: 4px solid var(--emas-bright);
+  }
+  header .sub { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.7; margin-bottom: 4px; font-family: 'Inter', sans-serif; }
+  header h1 { font-family: 'Lora', serif; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  header .flag { font-size: 22px; margin: 0 8px; }
+  header .badge-row { display: flex; justify-content: center; gap: 12px; margin-top: 8px; }
+  header .badge { font-size: 11px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 3px 10px; letter-spacing: 0.5px; }
+
+  /* MAIN LAYOUT */
+  main { display: flex; gap: 0; max-width: 1000px; margin: 0 auto; padding: 20px 16px; align-items: flex-start; }
+
+  /* BOARD */
+  #board-section { flex: 0 0 auto; }
+  canvas#board { display: block; border: 2px solid var(--border); border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); cursor: default; }
+
+  /* SIDE PANEL */
+  #side { flex: 1; min-width: 200px; padding-left: 18px; display: flex; flex-direction: column; gap: 12px; }
+
+  .panel-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .panel-card h3 {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teks-muted);
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+
+  /* Player badges */
+  .player-row { display: flex; gap: 8px; flex-direction: column; }
+  .pbadge {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500;
+    border: 1.5px solid transparent; transition: all 0.2s;
+  }
+  .pbadge.p1 { background: #FEF3E2; color: #8B4513; border-color: #F0C080; }
+  .pbadge.p2 { background: #EAF2FF; color: #1A3A6B; border-color: #A8C8F0; }
+  .pbadge.active { box-shadow: 0 0 0 2px currentColor; }
+  .pbadge .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .pbadge.p1 .dot { background: #D48B30; }
+  .pbadge.p2 .dot { background: #2E6DB4; }
+  .pbadge .pos { margin-left: auto; font-size: 12px; background: rgba(0,0,0,0.07); padding: 1px 7px; border-radius: 20px; }
+
+  /* Message */
+  #msg-box { font-size: 13px; line-height: 1.65; color: var(--teks); min-height: 44px; }
+
+  /* Dadu display */
+  #dice-display { font-size: 36px; text-align: center; min-height: 44px; line-height: 1; }
+
+  /* Buttons */
+  .btn {
+    display: block; width: 100%; padding: 11px 16px;
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    border-radius: 10px; border: none; cursor: pointer;
+    transition: all 0.15s; text-align: center; letter-spacing: 0.3px;
+  }
+  .btn-primary {
+    background: var(--merah);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(192,57,43,0.35);
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--merah-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(192,57,43,0.4); }
+  .btn-primary:active:not(:disabled) { transform: translateY(0); }
+  .btn-primary:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--teks-muted);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--cell-a); color: var(--teks); }
+
+  /* Legend */
+  .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .leg { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--teks-muted); }
+  .leg-sym { width: 16px; text-align: center; font-size: 13px; }
+
+  /* QUESTION MODAL */
+  #q-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(28,28,28,0.55); backdrop-filter: blur(3px);
+    z-index: 200; align-items: center; justify-content: center; padding: 16px;
+  }
+  #q-overlay.show { display: flex; }
+  #q-box {
+    background: var(--bg-card);
+    border-radius: 18px;
+    padding: 28px 24px;
+    max-width: 420px; width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    position: relative;
+    border-top: 4px solid var(--merah);
+  }
+  #q-eyebrow {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--merah); font-weight: 600; margin-bottom: 8px;
+  }
+  #q-text {
+    font-family: 'Lora', serif;
+    font-size: 16px; line-height: 1.55; color: var(--teks);
+    margin-bottom: 18px; font-weight: 600;
+  }
+  .q-choices { display: flex; flex-direction: column; gap: 8px; }
+  .q-choice {
+    text-align: left; font-size: 13px; padding: 11px 14px;
+    border-radius: 9px; border: 1.5px solid var(--border);
+    background: #fff; cursor: pointer;
+    transition: all 0.14s; font-family: 'Inter', sans-serif;
+    width: 100%;
+  }
+  .q-choice:hover:not(:disabled) { border-color: var(--merah); color: var(--merah); background: var(--merah-light); }
+  .q-choice.correct { background: var(--hijau-light) !important; border-color: var(--hijau) !important; color: #145A32 !important; }
+  .q-choice.wrong { background: var(--merah-light) !important; border-color: var(--merah) !important; color: var(--merah-dark) !important; }
+  #q-result {
+    font-size: 13px; margin-top: 12px; padding: 10px 14px;
+    border-radius: 9px; display: none; line-height: 1.5;
+  }
+  #q-result.benar { background: var(--hijau-light); color: #145A32; }
+  #q-result.salah { background: var(--merah-light); color: var(--merah-dark); }
+  #q-next { margin-top: 14px; display: none; }
+
+  /* WIN SCREEN */
+  #win-screen {
+    display: none; position: fixed; inset: 0;
+    background: rgba(28,28,28,0.65); backdrop-filter: blur(4px);
+    z-index: 300; align-items: center; justify-content: center;
+  }
+  #win-screen.show { display: flex; }
+  #win-box {
+    background: var(--bg-card);
+    border-radius: 20px; padding: 40px 32px;
+    text-align: center; max-width: 340px; width: 90%;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+    border-top: 5px solid var(--emas-bright);
+  }
+  #win-box .trophy { font-size: 64px; margin-bottom: 12px; }
+  #win-box h2 { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+  #win-box p { font-size: 14px; color: var(--teks-muted); margin-bottom: 24px; }
+
+  /* Responsive */
+  @media (max-width: 680px) {
+    main { flex-direction: column; padding: 12px; }
+    #side { padding-left: 0; width: 100%; }
+    canvas#board { width: 100%; height: auto; }
+    header h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="sub">Permainan Edukasi</div>
+  <h1><span class="flag">🇮🇩</span> Ular Tangga Sejarah Indonesia <span class="flag">🇮🇩</span></h1>
+  <div class="badge-row">
+    <span class="badge">2 Pemain</span>
+    <span class="badge">10×10 Papan</span>
+    <span class="badge">Edukasi Sejarah</span>
+  </div>
+</header>
+
+<main>
+  <section id="board-section">
+    <canvas id="board" width="480" height="480"></canvas>
+  </section>
+
+  <aside id="side">
+    <div class="panel-card">
+      <h3>Pemain</h3>
+      <div class="player-row">
+        <div class="pbadge p1 active" id="badge-p1">
+          <span class="dot"></span>
+          <span>Pemain 1</span>
+          <span class="pos">Kotak <span id="p1-pos">1</span></span>
+        </div>
+        <div class="pbadge p2" id="badge-p2">
+          <span class="dot"></span>
+          <span>Pemain 2</span>
+          <span class="pos">Kotak <span id="p2-pos">1</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <h3>Dadu</h3>
+      <div id="dice-display">🎲</div>
+    </div>
+
+    <div class="panel-card">
+      <h3>Status</h3>
+      <p id="msg-box">Lempar dadu untuk memulai permainan!</p>
+    </div>
+
+    <button class="btn btn-primary" id="roll-btn" onclick="rollDice()">🎲 Lempar Dadu</button>
+    <button class="btn btn-secondary" onclick="resetGame()">↺ Main Ulang</button>
+
+    <div class="panel-card">
+      <h3>Keterangan</h3>
+      <div class="legend">
+        <div class="leg"><span class="leg-sym">🐍</span> Ular (turun)</div>
+        <div class="leg"><span class="leg-sym">🪜</span> Tangga (naik)</div>
+        <div class="leg"><span class="leg-sym" style="color:#D4B245">●</span> Pemain 1</div>
+        <div class="leg"><span class="leg-sym" style="color:#2E6DB4">●</span> Pemain 2</div>
+      </div>
+    </div>
+
+    <div class="panel-card" style="font-size:11px;color:var(--teks-muted);line-height:1.7">
+      <h3>Cara Main</h3>
+      Lempar dadu → Jawab pertanyaan.<br>
+      <strong>Kotak biasa:</strong> Benar=maju, Salah=ke kotak 1.<br>
+      <strong>Tangga:</strong> Benar=naik, Salah=tetap.<br>
+      <strong>Ular:</strong> Benar=selamat, Salah=turun.
+    </div>
+  </aside>
+</main>
+
+<!-- QUESTION MODAL -->
+<div id="q-overlay">
+  <div id="q-box">
+    <div id="q-eyebrow">Pertanyaan Sejarah Indonesia</div>
+    <p id="q-text"></p>
+    <div class="q-choices" id="q-choices"></div>
+    <div id="q-result"></div>
+    <button class="btn btn-primary" id="q-next" onclick="continueGame()">Lanjutkan →</button>
+  </div>
+</div>
+
+<!-- WIN SCREEN -->
+<div id="win-screen">
+  <div id="win-box">
+    <div class="trophy">🏆</div>
+    <h2 id="win-title">Pemain 1 Menang!</h2>
+    <p>Selamat! Kamu telah mencapai kotak 100 dan menguasai sejarah Indonesia!</p>
+    <button class="btn btn-primary" onclick="resetGame(); document.getElementById('win-screen').classList.remove('show')">Main Lagi</button>
+  </div>
+</div>
+
+<script>
+const CELL = 48;
+const COLS = 10;
+
+const SNAKES = { 97:78, 95:56, 87:24, 64:42, 54:34, 62:18, 49:11, 74:53 };
+const LADDERS = { 4:56, 9:31, 20:38, 28:84, 40:59, 51:67, 63:81, 71:91 };
+
+const DICE_FACE = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+const QUESTIONS = [
+  { q:"Kapan Indonesia memproklamasikan kemerdekaannya?", c:["17 Agustus 1945","17 Agustus 1946","15 Agustus 1945","20 Oktober 1945"], a:0 },
+  { q:"Siapa yang membacakan teks Proklamasi Kemerdekaan Indonesia?", c:["Soekarno saja","Hatta saja","Soekarno dan Hatta","Sjahrir dan Soekarno"], a:2 },
+  { q:"Di mana teks Proklamasi Kemerdekaan Indonesia dibacakan?", c:["Istana Merdeka","Jl. Pegangsaan Timur No. 56","Monas","Gedung DPR"], a:1 },
+  { q:"Siapakah Presiden pertama Republik Indonesia?", c:["Moh. Hatta","Sutan Sjahrir","Ir. Soekarno","Agus Salim"], a:2 },
+  { q:"Kapan Sumpah Pemuda diikrarkan?", c:["20 Mei 1908","28 Oktober 1928","17 Agustus 1945","1 Juni 1945"], a:1 },
+  { q:"Organisasi pergerakan nasional pertama Indonesia yang berdiri pada 1908 adalah...", c:["Sarekat Islam","Indische Partij","PNI","Budi Utomo"], a:3 },
+  { q:"Apa nama perjanjian yang mengakui kedaulatan Indonesia oleh Belanda pada 27 Des 1949?", c:["Perjanjian Renville","Perjanjian Linggarjati","KMB (Konferensi Meja Bundar)","Perjanjian Roem-Royen"], a:2 },
+  { q:"Siapakah pahlawan yang memimpin perang Diponegoro melawan Belanda (1825–1830)?", c:["Tuanku Imam Bonjol","Cut Nyak Dhien","Pattimura","Pangeran Diponegoro"], a:3 },
+  { q:"Hari Kebangkitan Nasional diperingati setiap tanggal...", c:["28 Oktober","10 November","2 Mei","20 Mei"], a:3 },
+  { q:"Tokoh yang memimpin pertempuran 10 November 1945 di Surabaya adalah...", c:["Soekarno","Bung Tomo","Ahmad Yani","Soedirman"], a:1 },
+  { q:"Pancasila pertama kali dirumuskan oleh Soekarno pada tanggal...", c:["17 Agustus 1945","18 Agustus 1945","28 Oktober 1928","1 Juni 1945"], a:3 },
+  { q:"Siapakah Wakil Presiden pertama Indonesia?", c:["Sutan Sjahrir","Ahmad Soebardjo","Moh. Hatta","Ki Hajar Dewantara"], a:2 },
+  { q:"VOC (Vereenigde Oostindische Compagnie) didirikan Belanda pada tahun...", c:["1511","1619","1799","1602"], a:3 },
+  { q:"Tanam paksa (cultuurstelsel) diterapkan pada masa Gubernur Jenderal...", c:["Daendels","Raffles","Jan Pieterszoon Coen","Van den Bosch"], a:3 },
+  { q:"Siapa tokoh yang dijuluki 'Bapak Pendidikan Nasional' Indonesia?", c:["Kartini","Ki Hajar Dewantara","KH. Ahmad Dahlan","Moh. Sjafei"], a:1 },
+  { q:"Pertempuran Ambarawa terjadi pada bulan apa tahun 1945?", c:["Agustus–September","Januari–Februari","November–Desember","Oktober–November"], a:2 },
+  { q:"Serangan Umum 1 Maret 1949 di Yogyakarta dipimpin oleh...", c:["Soekarno dan Hatta","Soedirman dan Nasution","Bung Tomo dan Supriyadi","Sri Sultan HB IX dan Soeharto"], a:3 },
+  { q:"Siapakah Jenderal Besar TNI pertama Indonesia?", c:["Jenderal A.H. Nasution","Jenderal Ahmad Yani","Jenderal Soeharto","Jenderal Soedirman"], a:3 },
+  { q:"Traktat London tahun 1824 membagi Nusantara antara...", c:["Portugis dan Spanyol","Belanda dan Portugis","Inggris dan Spanyol","Inggris dan Belanda"], a:3 },
+  { q:"Peristiwa Rengasdengklok terjadi pada tanggal...", c:["17 Agustus 1945","15 Agustus 1945","16 Agustus 1945","18 Agustus 1945"], a:2 },
+  { q:"Siapakah tokoh yang menyusun naskah teks Proklamasi?", c:["Ahmad Soebardjo dan Hatta","Soekarno, Hatta, dan Soebardjo","Soekarno seorang diri","Syahrir dan Soekarno"], a:1 },
+  { q:"Kota mana yang dijadikan ibu kota sementara RI ketika Belanda melancarkan Agresi Militer?", c:["Bandung","Surabaya","Yogyakarta","Bukittinggi"], a:2 },
+  { q:"Apa semboyan negara Indonesia yang tertulis pada lambang Garuda Pancasila?", c:["Bhinneka Tunggal Ika","Tut Wuri Handayani","Rawe-rawe Rantas","Maju tak gentar"], a:0 },
+  { q:"Siapa pencipta lagu kebangsaan Indonesia Raya?", c:["Ismail Marzuki","C. Simanjuntak","W.R. Supratman","L. Manik"], a:2 },
+  { q:"Peristiwa Reformasi 1998 yang mengakhiri Orde Baru terjadi pada bulan...", c:["Maret","April","Juni","Mei"], a:3 },
+];
+
+let state = {
+  players: [1, 1],
+  current: 0,
+  phase: 'roll',
+  pendingTarget: 0,
+  pendingCorrect: false,
+  pendingType: null,
+  gameOver: false
+};
+
+function cellToXY(cell) {
+  const idx = cell - 1;
+  const row = Math.floor(idx / 10);
+  const col = idx % 10;
+  const dRow = 9 - row;
+  const dCol = (row % 2 === 0) ? col : (9 - col);
+  return { x: dCol * CELL + CELL/2, y: dRow * CELL + CELL/2 };
+}
+
+const canvas = document.getElementById('board');
+const ctx = canvas.getContext('2d');
+
+function drawBoard() {
+  ctx.clearRect(0, 0, 480, 480);
+
+  // Cells
+  for (let i = 1; i <= 100; i++) {
+    const { x, y } = cellToXY(i);
+    const r = Math.floor((i-1)/10);
+    const c = (i-1) % 10;
+    const isLight = (r + c) % 2 === 0;
+    ctx.fillStyle = isLight ? '#FEF5E7' : '#FFFBF0';
+    ctx.fillRect(x - CELL/2, y - CELL/2, CELL, CELL);
+    ctx.strokeStyle = '#E8DCC8';
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(x - CELL/2, y - CELL/2, CELL, CELL);
+
+    // Number
+    ctx.fillStyle = '#C8B89A';
+    ctx.font = '9px Inter, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(i, x - CELL/2 + 2, y - CELL/2 + 10);
+
+    // Highlight snake/ladder cells
+    if (SNAKES[i]) {
+      ctx.fillStyle = 'rgba(192,57,43,0.08)';
+      ctx.fillRect(x - CELL/2, y - CELL/2, CELL, CELL);
+    }
+    if (LADDERS[i]) {
+      ctx.fillStyle = 'rgba(26,122,74,0.08)';
+      ctx.fillRect(x - CELL/2, y - CELL/2, CELL, CELL);
+    }
+  }
+
+  // Snakes
+  Object.entries(SNAKES).forEach(([head, tail]) => {
+    const h = cellToXY(+head), t = cellToXY(+tail);
+    const mx = (h.x + t.x) / 2 + (h.x > t.x ? 18 : -18);
+    const my = (h.y + t.y) / 2;
+    ctx.beginPath();
+    ctx.moveTo(h.x, h.y);
+    ctx.quadraticCurveTo(mx, my, t.x, t.y);
+    ctx.strokeStyle = '#C0392B';
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    ctx.setLineDash([]);
+    ctx.stroke();
+    // Snake emoji at head
+    ctx.font = '16px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🐍', h.x, h.y + 6);
+  });
+
+  // Ladders
+  Object.entries(LADDERS).forEach(([bottom, top]) => {
+    const b = cellToXY(+bottom), t = cellToXY(+top);
+    const dx = t.x - b.x, dy = t.y - b.y;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    const nx = -dy/len * 4, ny = dx/len * 4;
+
+    ctx.strokeStyle = '#1A7A4A';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.setLineDash([]);
+
+    ctx.beginPath(); ctx.moveTo(b.x+nx, b.y+ny); ctx.lineTo(t.x+nx, t.y+ny); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(b.x-nx, b.y-ny); ctx.lineTo(t.x-nx, t.y-ny); ctx.stroke();
+
+    const rungs = 5;
+    ctx.strokeStyle = '#15803D'; ctx.lineWidth = 2;
+    for (let s = 1; s < rungs; s++) {
+      const rx = b.x + dx*s/rungs, ry = b.y + dy*s/rungs;
+      ctx.beginPath(); ctx.moveTo(rx+nx*1.8, ry+ny*1.8); ctx.lineTo(rx-nx*1.8, ry-ny*1.8); ctx.stroke();
+    }
+    ctx.font = '14px serif'; ctx.textAlign = 'center';
+    ctx.fillText('🪜', b.x, b.y + 5);
+  });
+
+  // Players
+  drawPlayer(0, state.players[0]);
+  drawPlayer(1, state.players[1]);
+
+  document.getElementById('p1-pos').textContent = state.players[0];
+  document.getElementById('p2-pos').textContent = state.players[1];
+}
+
+function drawPlayer(idx, cell) {
+  const { x, y } = cellToXY(cell);
+  const offset = idx === 0 ? -8 : 8;
+  const colors = [['#D4B245','#92400E'], ['#2E6DB4','#1A3A6B']];
+  const [fill, stroke] = colors[idx];
+
+  ctx.beginPath();
+  ctx.arc(x + offset, y + 6, 9, 0, Math.PI*2);
+  ctx.fillStyle = fill;
+  ctx.fill();
+  ctx.strokeStyle = stroke;
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 10px Inter, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(idx+1, x + offset, y + 10);
+}
+
+function updateTurnBadge() {
+  document.getElementById('badge-p1').classList.toggle('active', state.current === 0);
+  document.getElementById('badge-p2').classList.toggle('active', state.current === 1);
+}
+
+function setMsg(html) {
+  document.getElementById('msg-box').innerHTML = html;
+}
+
+function getQ() {
+  return QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)];
+}
+
+function rollDice() {
+  if (state.gameOver || state.phase !== 'roll') return;
+  const roll = Math.floor(Math.random() * 6) + 1;
+  const p = state.current;
+  document.getElementById('dice-display').textContent = DICE_FACE[roll-1];
+  document.getElementById('roll-btn').disabled = true;
+
+  let newPos = state.players[p] + roll;
+  if (newPos > 100) newPos = state.players[p];
+
+  if (newPos === state.players[p]) {
+    setMsg(`Dadu: <strong>${roll}</strong> — sudah dekat finish, tidak bisa maju!`);
+    nextTurn();
+    return;
+  }
+
+  setMsg(`Dadu: <strong>${roll}</strong> — Pemain ${p+1} menuju kotak <strong>${newPos}</strong>…`);
+
+  setTimeout(() => {
+    if (SNAKES[newPos]) {
+      state.players[p] = newPos;
+      drawBoard();
+      setMsg(`🐍 Kotak ${newPos} ada ular! Jawab pertanyaan untuk selamat!`);
+      openQuestion('snake', SNAKES[newPos]);
+    } else if (LADDERS[newPos]) {
+      state.players[p] = newPos;
+      drawBoard();
+      setMsg(`🪜 Kotak ${newPos} ada tangga! Jawab pertanyaan untuk naik!`);
+      openQuestion('ladder', LADDERS[newPos]);
+    } else {
+      openQuestion('normal', newPos);
+    }
+  }, 350);
+}
+
+function openQuestion(type, target) {
+  const q = getQ();
+  state.pendingType = type;
+  state.pendingTarget = target;
+  state.pendingQ = q;
+
+  const labels = {
+    normal: `📜 Maju ke kotak ${target} — Jawab dengan benar!`,
+    ladder: `🪜 Tangga ke kotak ${target} — Jawab benar untuk naik!`,
+    snake: `🐍 Ular ke kotak ${target} — Jawab benar untuk selamat!`
+  };
+  document.getElementById('q-eyebrow').textContent = labels[type];
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-result').style.display = 'none';
+  document.getElementById('q-result').className = '';
+  document.getElementById('q-next').style.display = 'none';
+
+  const box = document.getElementById('q-choices');
+  box.innerHTML = '';
+  q.c.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'q-choice';
+    btn.textContent = String.fromCharCode(65+i) + '. ' + opt;
+    btn.onclick = () => answerQuestion(i);
+    box.appendChild(btn);
+  });
+
+  document.getElementById('q-overlay').classList.add('show');
+}
+
+function answerQuestion(chosen) {
+  const q = state.pendingQ;
+  const correct = chosen === q.a;
+  state.pendingCorrect = correct;
+
+  document.querySelectorAll('.q-choice').forEach((b, i) => {
+    b.disabled = true;
+    b.onclick = null;
+    if (i === q.a) b.classList.add('correct');
+    else if (i === chosen && !correct) b.classList.add('wrong');
+  });
+
+  const res = document.getElementById('q-result');
+  res.style.display = 'block';
+  const type = state.pendingType;
+  const target = state.pendingTarget;
+
+  if (correct) {
+    res.className = 'benar';
+    if (type === 'ladder') res.textContent = '✅ Benar! Kamu naik tangga!';
+    else if (type === 'snake') res.textContent = '✅ Benar! Kamu selamat dari ular!';
+    else res.textContent = `✅ Benar! Maju ke kotak ${target}!`;
+  } else {
+    res.className = 'salah';
+    if (type === 'ladder') res.textContent = '❌ Salah! Tidak bisa naik tangga, tetap di tempat.';
+    else if (type === 'snake') res.textContent = `❌ Salah! Dimakan ular, turun ke kotak ${target}!`;
+    else res.textContent = '❌ Salah! Kamu mundur ke kotak 1.';
+  }
+
+  document.getElementById('q-next').style.display = 'block';
+}
+
+function continueGame() {
+  document.getElementById('q-overlay').classList.remove('show');
+  const p = state.current;
+  const correct = state.pendingCorrect;
+  const type = state.pendingType;
+  const target = state.pendingTarget;
+
+  if (type === 'normal') {
+    if (correct) {
+      state.players[p] = target;
+      if (target === 100) { drawBoard(); showWin(p); return; }
+      setMsg(`✅ Benar! Pemain ${p+1} maju ke kotak <strong>${target}</strong>.`);
+    } else {
+      state.players[p] = 1;
+      setMsg(`❌ Salah! Pemain ${p+1} mundur ke <strong>kotak 1</strong>.`);
+    }
+  } else if (type === 'ladder') {
+    if (correct) {
+      state.players[p] = target;
+      setMsg(`🪜 Pemain ${p+1} naik tangga ke kotak <strong>${target}</strong>!`);
+    } else {
+      setMsg(`❌ Pemain ${p+1} tidak bisa naik tangga, tetap di tempat.`);
+    }
+  } else if (type === 'snake') {
+    if (correct) {
+      setMsg(`✅ Pemain ${p+1} selamat dari ular!`);
+    } else {
+      state.players[p] = target;
+      setMsg(`🐍 Pemain ${p+1} dimakan ular, turun ke kotak <strong>${target}</strong>!`);
+    }
+  }
+
+  drawBoard();
+  nextTurn();
+}
+
+function nextTurn() {
+  state.current = 1 - state.current;
+  updateTurnBadge();
+  state.phase = 'roll';
+  document.getElementById('roll-btn').disabled = false;
+}
+
+function showWin(p) {
+  state.gameOver = true;
+  document.getElementById('roll-btn').disabled = true;
+  document.getElementById('win-title').textContent = `Pemain ${p+1} Menang! 🎉`;
+  document.getElementById('win-screen').classList.add('show');
+}
+
+function resetGame() {
+  state = { players:[1,1], current:0, phase:'roll', pendingTarget:0, pendingCorrect:false, pendingType:null, pendingQ:null, gameOver:false };
+  document.getElementById('roll-btn').disabled = false;
+  document.getElementById('dice-display').textContent = '🎲';
+  document.getElementById('q-overlay').classList.remove('show');
+  document.getElementById('win-screen').classList.remove('show');
+  setMsg('Lempar dadu untuk memulai permainan!');
+  updateTurnBadge();
+  drawBoard();
+}
+
+drawBoard();
+</script>
+</body>
+</html>
