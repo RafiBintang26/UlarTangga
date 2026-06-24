@@ -86,12 +86,8 @@
     padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500;
     border: 1.5px solid transparent; transition: all 0.2s;
   }
-  .pbadge.p1 { background: #FEF3E2; color: #8B4513; border-color: #F0C080; }
-  .pbadge.p2 { background: #EAF2FF; color: #1A3A6B; border-color: #A8C8F0; }
   .pbadge.active { box-shadow: 0 0 0 2px currentColor; }
   .pbadge .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .pbadge.p1 .dot { background: #D48B30; }
-  .pbadge.p2 .dot { background: #2E6DB4; }
   .pbadge .pos { margin-left: auto; font-size: 12px; background: rgba(0,0,0,0.07); padding: 1px 7px; border-radius: 20px; }
 
   /* Message */
@@ -123,7 +119,7 @@
   .btn-secondary:hover { background: var(--cell-a); color: var(--teks); }
 
   /* Legend */
-  .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .legend { display: flex; flex-direction: column; gap: 6px; }
   .leg { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--teks-muted); }
   .leg-sym { width: 16px; text-align: center; font-size: 13px; }
 
@@ -138,13 +134,13 @@
     background: var(--bg-card);
     border-radius: 18px;
     padding: 28px 24px;
-    max-width: 420px; width: 100%;
+    max-width: 440px; width: 100%;
     box-shadow: 0 20px 60px rgba(0,0,0,0.25);
     position: relative;
     border-top: 4px solid var(--merah);
   }
   #q-eyebrow {
-    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
     color: var(--merah); font-weight: 600; margin-bottom: 8px;
   }
   #q-text {
@@ -189,6 +185,118 @@
   #win-box h2 { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; margin-bottom: 6px; }
   #win-box p { font-size: 14px; color: var(--teks-muted); margin-bottom: 24px; }
 
+  /* SETUP SCREEN OVERLAY */
+  .setup-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, #FDFAF6 40%, #E0D8CC 100%);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow-y: auto;
+  }
+  .setup-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-top: 5px solid var(--merah);
+    border-radius: 20px;
+    padding: 32px 28px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  .setup-box h2 {
+    font-family: 'Lora', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--merah-dark);
+    margin-bottom: 8px;
+  }
+  .setup-box p {
+    font-size: 13px;
+    color: var(--teks-muted);
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  .setup-section {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  .setup-section label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--teks-muted);
+    margin-bottom: 8px;
+  }
+  .player-count-selector {
+    display: flex;
+    gap: 8px;
+  }
+  .count-btn {
+    flex: 1;
+    padding: 10px;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .count-btn:hover {
+    border-color: var(--merah);
+    color: var(--merah);
+    background: var(--merah-light);
+  }
+  .count-btn.active {
+    background: var(--merah);
+    color: #fff;
+    border-color: var(--merah);
+  }
+  .names-inputs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .name-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: all 0.15s;
+  }
+  .name-input-group:focus-within {
+    border-color: var(--merah);
+    box-shadow: 0 0 0 3px var(--merah-light);
+  }
+  .name-input-group .color-badge {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .name-input-group input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--teks);
+  }
+
   /* Responsive */
   @media (max-width: 680px) {
     main { flex-direction: column; padding: 12px; }
@@ -200,11 +308,40 @@
 </head>
 <body>
 
+<!-- SETUP SCREEN -->
+<div id="setup-screen" class="setup-overlay">
+  <div class="setup-box">
+    <div style="font-size: 40px; margin-bottom: 8px;">🇮🇩</div>
+    <h2>Ular Tangga Sejarah</h2>
+    <p>Game edukasi sejarah Indonesia tingkat SD. Pilih jumlah pemain, masukkan nama, dan bersiaplah menguji wawasanmu!</p>
+    
+    <div class="setup-section">
+      <label>Jumlah Pemain</label>
+      <div class="player-count-selector">
+        <button type="button" class="count-btn active" data-count="2">2</button>
+        <button type="button" class="count-btn" data-count="3">3</button>
+        <button type="button" class="count-btn" data-count="4">4</button>
+        <button type="button" class="count-btn" data-count="5">5</button>
+        <button type="button" class="count-btn" data-count="6">6</button>
+      </div>
+    </div>
+    
+    <div class="setup-section">
+      <label>Nama Pemain</label>
+      <div id="player-names-inputs" class="names-inputs-container">
+        <!-- Dynamic inputs will be generated here -->
+      </div>
+    </div>
+    
+    <button class="btn btn-primary" style="margin-top: 10px;" onclick="startGameFromSetup()">Mulai Permainan 🎮</button>
+  </div>
+</div>
+
 <header>
   <div class="sub">Permainan Edukasi</div>
   <h1><span class="flag">🇮🇩</span> Ular Tangga Sejarah Indonesia <span class="flag">🇮🇩</span></h1>
   <div class="badge-row">
-    <span class="badge">2 Pemain</span>
+    <span class="badge" id="player-count-badge">2 Pemain</span>
     <span class="badge">10×10 Papan</span>
     <span class="badge">Edukasi Sejarah</span>
   </div>
@@ -219,16 +356,7 @@
     <div class="panel-card">
       <h3>Pemain</h3>
       <div class="player-row">
-        <div class="pbadge p1 active" id="badge-p1">
-          <span class="dot"></span>
-          <span>Pemain 1</span>
-          <span class="pos">Kotak <span id="p1-pos">1</span></span>
-        </div>
-        <div class="pbadge p2" id="badge-p2">
-          <span class="dot"></span>
-          <span>Pemain 2</span>
-          <span class="pos">Kotak <span id="p2-pos">1</span></span>
-        </div>
+        <!-- Dynamic player lists will be inserted here -->
       </div>
     </div>
 
@@ -239,7 +367,7 @@
 
     <div class="panel-card">
       <h3>Status</h3>
-      <p id="msg-box">Lempar dadu untuk memulai permainan!</p>
+      <p id="msg-box">Silakan pilih pemain untuk memulai!</p>
     </div>
 
     <button class="btn btn-primary" id="roll-btn" onclick="rollDice()">🎲 Lempar Dadu</button>
@@ -247,20 +375,18 @@
 
     <div class="panel-card">
       <h3>Keterangan</h3>
-      <div class="legend">
+      <div class="legend" id="legend-list">
         <div class="leg"><span class="leg-sym">🐍</span> Ular (turun)</div>
         <div class="leg"><span class="leg-sym">🪜</span> Tangga (naik)</div>
-        <div class="leg"><span class="leg-sym" style="color:#D4B245">●</span> Pemain 1</div>
-        <div class="leg"><span class="leg-sym" style="color:#2E6DB4">●</span> Pemain 2</div>
+        <!-- Player legends dynamically inserted -->
       </div>
     </div>
 
     <div class="panel-card" style="font-size:11px;color:var(--teks-muted);line-height:1.7">
       <h3>Cara Main</h3>
       Lempar dadu → Jawab pertanyaan.<br>
-      <strong>Kotak biasa:</strong> Benar=maju, Salah=ke kotak 1.<br>
-      <strong>Tangga:</strong> Benar=naik, Salah=tetap.<br>
-      <strong>Ular:</strong> Benar=selamat, Salah=turun.
+      <strong>Benar:</strong> Jalan sesuai angka dadu yang diperoleh. Jika mendarat di tangga/ular akan memicu efek naik/turun.<br>
+      <strong>Salah:</strong> Diam di posisinya (tetap di kotak semula).
     </div>
   </aside>
 </main>
@@ -280,7 +406,7 @@
 <div id="win-screen">
   <div id="win-box">
     <div class="trophy">🏆</div>
-    <h2 id="win-title">Pemain 1 Menang!</h2>
+    <h2 id="win-title">Pemain Menang!</h2>
     <p>Selamat! Kamu telah mencapai kotak 100 dan menguasai sejarah Indonesia!</p>
     <button class="btn btn-primary" onclick="resetGame(); document.getElementById('win-screen').classList.remove('show')">Main Lagi</button>
   </div>
@@ -296,42 +422,187 @@ const LADDERS = { 4:56, 9:31, 20:38, 28:84, 40:59, 51:67, 63:81, 71:91 };
 const DICE_FACE = ['⚀','⚁','⚂','⚃','⚄','⚅'];
 
 const QUESTIONS = [
-  { q:"Kapan Indonesia memproklamasikan kemerdekaannya?", c:["17 Agustus 1945","17 Agustus 1946","15 Agustus 1945","20 Oktober 1945"], a:0 },
-  { q:"Siapa yang membacakan teks Proklamasi Kemerdekaan Indonesia?", c:["Soekarno saja","Hatta saja","Soekarno dan Hatta","Sjahrir dan Soekarno"], a:2 },
-  { q:"Di mana teks Proklamasi Kemerdekaan Indonesia dibacakan?", c:["Istana Merdeka","Jl. Pegangsaan Timur No. 56","Monas","Gedung DPR"], a:1 },
-  { q:"Siapakah Presiden pertama Republik Indonesia?", c:["Moh. Hatta","Sutan Sjahrir","Ir. Soekarno","Agus Salim"], a:2 },
-  { q:"Kapan Sumpah Pemuda diikrarkan?", c:["20 Mei 1908","28 Oktober 1928","17 Agustus 1945","1 Juni 1945"], a:1 },
-  { q:"Organisasi pergerakan nasional pertama Indonesia yang berdiri pada 1908 adalah...", c:["Sarekat Islam","Indische Partij","PNI","Budi Utomo"], a:3 },
-  { q:"Apa nama perjanjian yang mengakui kedaulatan Indonesia oleh Belanda pada 27 Des 1949?", c:["Perjanjian Renville","Perjanjian Linggarjati","KMB (Konferensi Meja Bundar)","Perjanjian Roem-Royen"], a:2 },
-  { q:"Siapakah pahlawan yang memimpin perang Diponegoro melawan Belanda (1825–1830)?", c:["Tuanku Imam Bonjol","Cut Nyak Dhien","Pattimura","Pangeran Diponegoro"], a:3 },
-  { q:"Hari Kebangkitan Nasional diperingati setiap tanggal...", c:["28 Oktober","10 November","2 Mei","20 Mei"], a:3 },
-  { q:"Tokoh yang memimpin pertempuran 10 November 1945 di Surabaya adalah...", c:["Soekarno","Bung Tomo","Ahmad Yani","Soedirman"], a:1 },
-  { q:"Pancasila pertama kali dirumuskan oleh Soekarno pada tanggal...", c:["17 Agustus 1945","18 Agustus 1945","28 Oktober 1928","1 Juni 1945"], a:3 },
-  { q:"Siapakah Wakil Presiden pertama Indonesia?", c:["Sutan Sjahrir","Ahmad Soebardjo","Moh. Hatta","Ki Hajar Dewantara"], a:2 },
-  { q:"VOC (Vereenigde Oostindische Compagnie) didirikan Belanda pada tahun...", c:["1511","1619","1799","1602"], a:3 },
-  { q:"Tanam paksa (cultuurstelsel) diterapkan pada masa Gubernur Jenderal...", c:["Daendels","Raffles","Jan Pieterszoon Coen","Van den Bosch"], a:3 },
-  { q:"Siapa tokoh yang dijuluki 'Bapak Pendidikan Nasional' Indonesia?", c:["Kartini","Ki Hajar Dewantara","KH. Ahmad Dahlan","Moh. Sjafei"], a:1 },
-  { q:"Pertempuran Ambarawa terjadi pada bulan apa tahun 1945?", c:["Agustus–September","Januari–Februari","November–Desember","Oktober–November"], a:2 },
-  { q:"Serangan Umum 1 Maret 1949 di Yogyakarta dipimpin oleh...", c:["Soekarno dan Hatta","Soedirman dan Nasution","Bung Tomo dan Supriyadi","Sri Sultan HB IX dan Soeharto"], a:3 },
-  { q:"Siapakah Jenderal Besar TNI pertama Indonesia?", c:["Jenderal A.H. Nasution","Jenderal Ahmad Yani","Jenderal Soeharto","Jenderal Soedirman"], a:3 },
-  { q:"Traktat London tahun 1824 membagi Nusantara antara...", c:["Portugis dan Spanyol","Belanda dan Portugis","Inggris dan Spanyol","Inggris dan Belanda"], a:3 },
-  { q:"Peristiwa Rengasdengklok terjadi pada tanggal...", c:["17 Agustus 1945","15 Agustus 1945","16 Agustus 1945","18 Agustus 1945"], a:2 },
-  { q:"Siapakah tokoh yang menyusun naskah teks Proklamasi?", c:["Ahmad Soebardjo dan Hatta","Soekarno, Hatta, dan Soebardjo","Soekarno seorang diri","Syahrir dan Soekarno"], a:1 },
-  { q:"Kota mana yang dijadikan ibu kota sementara RI ketika Belanda melancarkan Agresi Militer?", c:["Bandung","Surabaya","Yogyakarta","Bukittinggi"], a:2 },
-  { q:"Apa semboyan negara Indonesia yang tertulis pada lambang Garuda Pancasila?", c:["Bhinneka Tunggal Ika","Tut Wuri Handayani","Rawe-rawe Rantas","Maju tak gentar"], a:0 },
-  { q:"Siapa pencipta lagu kebangsaan Indonesia Raya?", c:["Ismail Marzuki","C. Simanjuntak","W.R. Supratman","L. Manik"], a:2 },
-  { q:"Peristiwa Reformasi 1998 yang mengakhiri Orde Baru terjadi pada bulan...", c:["Maret","April","Juni","Mei"], a:3 },
+  { q: "Kapan Indonesia memproklamasikan kemerdekaannya?", c: ["17 Agustus 1945", "17 Agustus 1946", "15 Agustus 1945", "20 Oktober 1945"], a: 0 },
+  { q: "Siapa yang membacakan teks Proklamasi Kemerdekaan Indonesia?", c: ["Ir. Soekarno", "Drs. Moh. Hatta", "Ir. Soekarno didampingi Drs. Moh. Hatta", "Sutan Sjahrir"], a: 2 },
+  { q: "Di mana teks Proklamasi Kemerdekaan Indonesia dibacakan?", c: ["Istana Merdeka", "Jl. Pegangsaan Timur No. 56", "Monas", "Gedung DPR"], a: 1 },
+  { q: "Siapakah Presiden pertama Republik Indonesia?", c: ["Moh. Hatta", "Sutan Sjahrir", "Ir. Soekarno", "Agus Salim"], a: 2 },
+  { q: "Kapan Sumpah Pemuda diikrarkan?", c: ["20 Mei 1908", "28 Oktober 1928", "17 Agustus 1945", "1 Juni 1945"], a: 1 },
+  { q: "Organisasi pergerakan nasional pertama Indonesia yang berdiri pada 1908 adalah...", c: ["Sarekat Islam", "Indische Partij", "PNI", "Budi Utomo"], a: 3 },
+  { q: "Apa nama perjanjian yang mengakui kedaulatan Indonesia oleh Belanda pada 27 Des 1949?", c: ["Perjanjian Renville", "Perjanjian Linggarjati", "KMB (Konferensi Meja Bundar)", "Perjanjian Roem-Royen"], a: 2 },
+  { q: "Siapakah pahlawan yang memimpin perang Diponegoro melawan Belanda (1825–1830)?", c: ["Tuanku Imam Bonjol", "Cut Nyak Dhien", "Pattimura", "Pangeran Diponegoro"], a: 3 },
+  { q: "Hari Kebangkitan Nasional diperingati setiap tanggal...", c: ["28 Oktober", "10 November", "2 Mei", "20 Mei"], a: 3 },
+  { q: "Tokoh yang memimpin pertempuran 10 November 1945 di Surabaya adalah...", c: ["Soekarno", "Bung Tomo", "Ahmad Yani", "Soedirman"], a: 1 },
+  { q: "Pancasila pertama kali dirumuskan oleh Soekarno pada tanggal...", c: ["17 Agustus 1945", "18 Agustus 1945", "28 Oktober 1928", "1 Juni 1945"], a: 3 },
+  { q: "Siapakah Wakil Presiden pertama Indonesia?", c: ["Sutan Sjahrir", "Ahmad Soebardjo", "Moh. Hatta", "Ki Hajar Dewantara"], a: 2 },
+  { q: "VOC (Vereenigde Oostindische Compagnie) didirikan Belanda pada tahun...", c: ["1511", "1619", "1799", "1602"], a: 3 },
+  { q: "Tanam paksa (cultuurstelsel) diterapkan pada masa Gubernur Jenderal...", c: ["Daendels", "Raffles", "Jan Pieterszoon Coen", "Van den Bosch"], a: 3 },
+  { q: "Siapa tokoh yang dijuluki 'Bapak Pendidikan Nasional' Indonesia?", c: ["Kartini", "Ki Hajar Dewantara", "KH. Ahmad Dahlan", "Moh. Sjafei"], a: 1 },
+  { q: "Pertempuran Ambarawa terjadi pada bulan apa tahun 1945?", c: ["Agustus–September", "Januari–Februari", "November–Desember", "Oktober–November"], a: 2 },
+  { q: "Serangan Umum 1 Maret 1949 di Yogyakarta dipimpin oleh...", c: ["Soekarno dan Hatta", "Soedirman dan Nasution", "Bung Tomo dan Supriyadi", "Letkol Soeharto atas gagasan Sri Sultan HB IX"], a: 3 },
+  { q: "Siapakah Jenderal Besar TNI pertama Indonesia?", c: ["Jenderal A.H. Nasution", "Jenderal Ahmad Yani", "Jenderal Soeharto", "Jenderal Soedirman"], a: 3 },
+  { q: "Traktat London tahun 1824 membagi Nusantara antara...", c: ["Portugis dan Spanyol", "Belanda dan Portugis", "Inggris dan Spanyol", "Inggris dan Belanda"], a: 3 },
+  { q: "Peristiwa Rengasdengklok terjadi pada tanggal...", c: ["17 Agustus 1945", "15 Agustus 1945", "16 Agustus 1945", "18 Agustus 1945"], a: 2 },
+  { q: "Siapakah tokoh yang menyusun naskah teks Proklamasi?", c: ["Ahmad Soebardjo dan Hatta", "Soekarno, Hatta, dan Soebardjo", "Soekarno seorang diri", "Syahrir dan Soekarno"], a: 1 },
+  { q: "Kota mana yang dijadikan ibu kota sementara RI ketika Belanda melancarkan Agresi Militer?", c: ["Bandung", "Surabaya", "Yogyakarta", "Bukittinggi"], a: 2 },
+  { q: "Apa semboyan negara Indonesia yang tertulis pada lambang Garuda Pancasila?", c: ["Bhinneka Tunggal Ika", "Tut Wuri Handayani", "Rawe-rawe Rantas", "Maju tak gentar"], a: 0 },
+  { q: "Siapa pencipta lagu kebangsaan Indonesia Raya?", c: ["Ismail Marzuki", "C. Simanjuntak", "W.R. Supratman", "L. Manik"], a: 2 },
+  { q: "Peristiwa Reformasi 1998 yang mengakhiri Orde Baru terjadi pada bulan...", c: ["Maret", "April", "Juni", "Mei"], a: 3 },
+  { q: "Pahlawan wanita dari Aceh yang berjuang melawan Belanda setelah suaminya gugur adalah...", c: ["R.A. Kartini", "Cut Nyak Dhien", "Dewi Sartika", "Fatmawati"], a: 1 },
+  { q: "Rumah Laksamana Maeda digunakan untuk merumuskan teks proklamasi karena beliau...", c: ["Menjanjikan hadiah uang", "Merupakan utusan Sekutu", "Menjamin keamanan para tokoh Indonesia", "Ingin menjadi presiden pertama"], a: 2 },
+  { q: "Kerajaan Majapahit mencapai puncak kejayaannya di bawah pimpinan Raja...", c: ["Mulawarman", "Hayam Wuruk", "Raden Wijaya", "Balaputradewa"], a: 1 },
+  { q: "Siapakah Mahapatih Majapahit yang terkenal dengan Sumpah Palapa?", c: ["Gajah Mada", "Kertanegara", "Ken Arok", "Mpu Gandring"], a: 0 },
+  { q: "Candi Borobudur dibangun pada masa dinasti...", c: ["Sanjaya", "Syailendra", "Isyana", "Kediri"], a: 1 },
+  { q: "Siapakah pahlawan nasional yang mendapat julukan 'Ayam Jantan dari Timur'?", c: ["Pangeran Antasari", "Sultan Hasanuddin", "Sultan Agung", "Pattimura"], a: 1 },
+  { q: "Bendera Pusaka Merah Putih dijahit oleh...", c: ["Fatmawati", "R.A. Kartini", "Megawati", "Dewi Sartika"], a: 0 },
+  { q: "Siapakah yang mengetik naskah teks Proklamasi Kemerdekaan?", c: ["Sayuti Melik", "Sukarni", "B.M. Diah", "Wikana"], a: 0 },
+  { q: "Belanda pertama kali mendarat di Indonesia dipimpin oleh Cornelis de Houtman di pelabuhan...", c: ["Sunda Kelapa", "Banten", "Malaka", "Batavia"], a: 1 },
+  { q: "Nama organisasi semi-militer bentukan Jepang untuk pemuda Indonesia adalah...", c: ["Putera", "Heiho", "Seinondan", "Peta"], a: 2 },
+  { q: "Kerajaan Islam pertama di Indonesia adalah...", c: ["Demak", "Samudera Pasai", "Aceh Darussalam", "Banten"], a: 1 },
+  { q: "Sumpah Palapa yang diucapkan Patih Gajah Mada berisi sumpah untuk...", c: ["Mengalahkan Belanda", "Menyatukan Nusantara", "Membangun candi terbesar", "Mengusir Portugis"], a: 1 },
+  { q: "Siapa nama pahlawan dari Maluku yang memimpin perlawanan di benteng Duurstede?", c: ["Sultan Hasanuddin", "Kapitan Pattimura", "Pangeran Nuku", "Sisingamangaraja XII"], a: 1 },
+  { q: "Suku bangsa asli yang mendiami wilayah Papua Barat adalah suku...", c: ["Asmat dan Dani", "Dayak dan Banjar", "Baduy dan Sunda", "Bugis dan Toraja"], a: 0 },
+  { q: "Badan bentukan Jepang yang bertugas mempersiapkan kemerdekaan Indonesia (BPUPKI) dipimpin oleh...", c: ["Ir. Soekarno", "Dr. Radjiman Wedyodiningrat", "Moh. Hatta", "Ahmad Soebardjo"], a: 1 },
+  { q: "Dalam bahasa Jepang, BPUPKI disebut...", c: ["Dokuritsu Junbi Cosakai", "Dokuritsu Junbi Inkai", "Heiho", "Keibodan"], a: 0 },
+  { q: "Panitia Sembilan menghasilkan dokumen rancangan pembukaan UUD yang disebut...", c: ["Pancasila", "Piagam Jakarta (Jakarta Charter)", "Proklamasi", "Sumpah Pemuda"], a: 1 },
+  { q: "Apa nama badan bentukan Jepang yang menggantikan BPUPKI pada tanggal 7 Agustus 1945?", c: ["PETA", "KNIP", "PPKI (Dokuritsu Junbi Inkai)", "Kaoen"], a: 2 },
+  { q: "Hari Lahir Pancasila diperingati setiap tanggal...", c: ["1 Juni", "17 Agustus", "1 Oktober", "28 Oktober"], a: 0 },
+  { q: "Hari Kesaktian Pancasila diperingati setiap tanggal...", c: ["1 Juni", "17 Agustus", "1 Oktober", "10 November"], a: 2 },
+  { q: "Tokoh yang menjabat sebagai ketua PPKI adalah...", c: ["Moh. Hatta", "Ir. Soekarno", "Radjiman Wedyodiningrat", "Sutan Sjahrir"], a: 1 },
+  { q: "Siapakah pahlawan emansipasi wanita Indonesia yang menulis kumpulan surat 'Habis Gelap Terbitlah Terang'?", c: ["Dewi Sartika", "R.A. Kartini", "Cut Nyak Dhien", "Christina Martha Tiahahu"], a: 1 },
+  { q: "Tiga tokoh perumus Pancasila dalam sidang pertama BPUPKI adalah...", c: ["Soekarno, Hatta, Sjahrir", "Soepomo, Moh. Yamin, Soekarno", "Ahmad Soebardjo, Ki Hajar Dewantara, Hatta", "Radjiman, Tan Malaka, Agus Salim"], a: 1 },
+  { q: "Perang Padri yang dipimpin oleh Tuanku Imam Bonjol terjadi di provinsi...", c: ["Sumatera Utara", "Sumatera Barat", "Aceh", "Riau"], a: 1 },
+  { q: "Lagu 'Indonesia Raya' pertama kali diperdengarkan secara resmi pada peristiwa...", c: ["Proklamasi Kemerdekaan", "Kongres Pemuda II (Sumpah Pemuda)", "Sidang BPUPKI", "Deklarasi Juanda"], a: 1 }
+];
+
+const PRESET_COLORS = [
+  { name: 'Merah', fill: '#C0392B', stroke: '#922B21' },
+  { name: 'Biru', fill: '#1A5276', stroke: '#113F5C' },
+  { name: 'Hijau', fill: '#1A7A4A', stroke: '#115332' },
+  { name: 'Emas', fill: '#D4AC0D', stroke: '#9A7D0A' },
+  { name: 'Ungu', fill: '#7D3C98', stroke: '#5B2C6F' },
+  { name: 'Oranye', fill: '#CA6F1E', stroke: '#935116' }
 ];
 
 let state = {
-  players: [1, 1],
+  players: [],
+  names: [],
+  colors: [],
   current: 0,
   phase: 'roll',
   pendingTarget: 0,
   pendingCorrect: false,
   pendingType: null,
-  gameOver: false
+  gameOver: false,
+  diceRoll: 1,
+  animatingPlayer: null
 };
+
+// Web Audio API Sound Synthesizer
+let audioCtx = null;
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+function playSound(type) {
+  try {
+    initAudio();
+    if (!audioCtx) return;
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    const t = audioCtx.currentTime;
+    
+    if (type === 'dice') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(150, t);
+      osc.frequency.exponentialRampToValueAtTime(600, t + 0.1);
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.linearRampToValueAtTime(0.01, t + 0.1);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.12);
+    } else if (type === 'correct') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, t); // C5
+      osc.frequency.setValueAtTime(783.99, t + 0.08); // G5
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.setValueAtTime(0.12, t + 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.35);
+    } else if (type === 'wrong') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(130, t); // C3
+      osc.frequency.linearRampToValueAtTime(90, t + 0.25);
+      gain.gain.setValueAtTime(0.15, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.35);
+    } else if (type === 'ladder') {
+      const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // C4, E4, G4, C5, E5
+      notes.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t + idx * 0.08);
+        gain.gain.setValueAtTime(0.08, t + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.08 + 0.15);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t + idx * 0.08);
+        osc.stop(t + idx * 0.08 + 0.2);
+      });
+    } else if (type === 'snake') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(400, t);
+      osc.frequency.exponentialRampToValueAtTime(100, t + 0.4);
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.5);
+    } else if (type === 'win') {
+      const melody = [
+        { f: 261.63, d: 0.1 }, // C4
+        { f: 329.63, d: 0.1 }, // E4
+        { f: 392.00, d: 0.1 }, // G4
+        { f: 523.25, d: 0.4 }  // C5
+      ];
+      let delay = 0;
+      melody.forEach((note) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(note.f, t + delay);
+        gain.gain.setValueAtTime(0.12, t + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + delay + note.d);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t + delay);
+        osc.stop(t + delay + note.d + 0.05);
+        delay += note.d;
+      });
+    }
+  } catch (e) {
+    console.error("Audio error", e);
+  }
+}
 
 function cellToXY(cell) {
   const idx = cell - 1;
@@ -364,7 +635,8 @@ function drawBoard() {
     ctx.fillStyle = '#C8B89A';
     ctx.font = '9px Inter, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(i, x - CELL/2 + 2, y - CELL/2 + 10);
+    ctx.textBaseline = 'top';
+    ctx.fillText(i, x - CELL/2 + 2, y - CELL/2 + 2);
 
     // Highlight snake/ladder cells
     if (SNAKES[i]) {
@@ -393,7 +665,8 @@ function drawBoard() {
     // Snake emoji at head
     ctx.font = '16px serif';
     ctx.textAlign = 'center';
-    ctx.fillText('🐍', h.x, h.y + 6);
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🐍', h.x, h.y);
   });
 
   // Ladders
@@ -417,41 +690,114 @@ function drawBoard() {
       const rx = b.x + dx*s/rungs, ry = b.y + dy*s/rungs;
       ctx.beginPath(); ctx.moveTo(rx+nx*1.8, ry+ny*1.8); ctx.lineTo(rx-nx*1.8, ry-ny*1.8); ctx.stroke();
     }
-    ctx.font = '14px serif'; ctx.textAlign = 'center';
-    ctx.fillText('🪜', b.x, b.y + 5);
+    ctx.font = '14px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('🪜', b.x, b.y);
   });
 
-  // Players
-  drawPlayer(0, state.players[0]);
-  drawPlayer(1, state.players[1]);
+  // Group non-animating players by cell
+  const cellsMap = {};
+  state.players.forEach((cell, pIdx) => {
+    if (state.animatingPlayer && state.animatingPlayer.idx === pIdx) {
+      return; 
+    }
+    if (!cellsMap[cell]) {
+      cellsMap[cell] = [];
+    }
+    cellsMap[cell].push(pIdx);
+  });
 
-  document.getElementById('p1-pos').textContent = state.players[0];
-  document.getElementById('p2-pos').textContent = state.players[1];
-}
+  // Draw non-animating players
+  Object.entries(cellsMap).forEach(([cellStr, pIndices]) => {
+    const cell = parseInt(cellStr);
+    const { x, y } = cellToXY(cell);
+    const count = pIndices.length;
+    
+    pIndices.forEach((pIdx, groupIndex) => {
+      let dx = 0;
+      let dy = 0;
+      
+      if (count === 1) {
+        dx = 0;
+        dy = 4;
+      } else if (count === 2) {
+        dx = groupIndex === 0 ? -9 : 9;
+        dy = 4;
+      } else if (count === 3) {
+        if (groupIndex === 0) { dx = 0; dy = -8; }
+        else if (groupIndex === 1) { dx = -9; dy = 8; }
+        else { dx = 9; dy = 8; }
+      } else if (count === 4) {
+        if (groupIndex === 0) { dx = -9; dy = -6; }
+        else if (groupIndex === 1) { dx = 9; dy = -6; }
+        else if (groupIndex === 2) { dx = -9; dy = 11; }
+        else { dx = 9; dy = 11; }
+      } else {
+        const angle = (groupIndex * 2 * Math.PI) / count;
+        const radius = 10;
+        dx = radius * Math.cos(angle);
+        dy = radius * Math.sin(angle) + 4;
+      }
 
-function drawPlayer(idx, cell) {
-  const { x, y } = cellToXY(cell);
-  const offset = idx === 0 ? -8 : 8;
-  const colors = [['#D4B245','#92400E'], ['#2E6DB4','#1A3A6B']];
-  const [fill, stroke] = colors[idx];
+      const fill = state.colors[pIdx].fill;
+      const stroke = state.colors[pIdx].stroke;
 
-  ctx.beginPath();
-  ctx.arc(x + offset, y + 6, 9, 0, Math.PI*2);
-  ctx.fillStyle = fill;
-  ctx.fill();
-  ctx.strokeStyle = stroke;
-  ctx.lineWidth = 1.5;
-  ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(x + dx, y + dy, 7.5, 0, Math.PI*2);
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
 
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 10px Inter, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(idx+1, x + offset, y + 10);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 8px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const label = state.names[pIdx] ? state.names[pIdx].charAt(0).toUpperCase() : (pIdx + 1);
+      ctx.fillText(label, x + dx, y + dy);
+    });
+  });
+
+  // Draw animating player at fractional coordinates
+  if (state.animatingPlayer) {
+    const { idx, x, y } = state.animatingPlayer;
+    const fill = state.colors[idx].fill;
+    const stroke = state.colors[idx].stroke;
+    
+    ctx.beginPath();
+    ctx.arc(x, y + 4, 7.5, 0, Math.PI*2);
+    ctx.fillStyle = fill;
+    ctx.fill();
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 8px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const label = state.names[idx] ? state.names[idx].charAt(0).toUpperCase() : (idx + 1);
+    ctx.fillText(label, x, y + 4);
+  }
 }
 
 function updateTurnBadge() {
-  document.getElementById('badge-p1').classList.toggle('active', state.current === 0);
-  document.getElementById('badge-p2').classList.toggle('active', state.current === 1);
+  state.players.forEach((_, idx) => {
+    const badge = document.getElementById(`badge-p${idx}`);
+    if (badge) {
+      badge.classList.toggle('active', idx === state.current);
+      if (idx === state.current) {
+        badge.style.boxShadow = `0 0 0 2.5px ${state.colors[idx].fill}`;
+      } else {
+        badge.style.boxShadow = 'none';
+      }
+    }
+  });
+
+  const rollBtn = document.getElementById('roll-btn');
+  if (rollBtn) {
+    rollBtn.innerHTML = `🎲 Lempar Dadu (${state.names[state.current]})`;
+  }
 }
 
 function setMsg(html) {
@@ -464,37 +810,44 @@ function getQ() {
 
 function rollDice() {
   if (state.gameOver || state.phase !== 'roll') return;
-  const roll = Math.floor(Math.random() * 6) + 1;
-  const p = state.current;
-  document.getElementById('dice-display').textContent = DICE_FACE[roll-1];
+  state.phase = 'animating';
   document.getElementById('roll-btn').disabled = true;
+
+  let rollCount = 0;
+  const rollInterval = setInterval(() => {
+    const tempRoll = Math.floor(Math.random() * 6) + 1;
+    document.getElementById('dice-display').textContent = DICE_FACE[tempRoll-1];
+    playSound('dice');
+    rollCount++;
+    if (rollCount > 8) {
+      clearInterval(rollInterval);
+      finalizeRoll();
+    }
+  }, 80);
+}
+
+function finalizeRoll() {
+  const roll = Math.floor(Math.random() * 6) + 1;
+  state.diceRoll = roll;
+  document.getElementById('dice-display').textContent = DICE_FACE[roll-1];
+  const p = state.current;
 
   let newPos = state.players[p] + roll;
   if (newPos > 100) newPos = state.players[p];
 
   if (newPos === state.players[p]) {
-    setMsg(`Dadu: <strong>${roll}</strong> — sudah dekat finish, tidak bisa maju!`);
-    nextTurn();
+    setMsg(`${state.names[p]} mendapat dadu <strong>${roll}</strong> — sudah dekat finish, tidak bisa maju!`);
+    setTimeout(() => {
+      nextTurn();
+    }, 1500);
     return;
   }
 
-  setMsg(`Dadu: <strong>${roll}</strong> — Pemain ${p+1} menuju kotak <strong>${newPos}</strong>…`);
+  setMsg(`Dadu: <strong>${roll}</strong> — Jawab kuis sejarah agar <strong>${state.names[p]}</strong> bisa maju ke kotak <strong>${newPos}</strong>!`);
 
   setTimeout(() => {
-    if (SNAKES[newPos]) {
-      state.players[p] = newPos;
-      drawBoard();
-      setMsg(`🐍 Kotak ${newPos} ada ular! Jawab pertanyaan untuk selamat!`);
-      openQuestion('snake', SNAKES[newPos]);
-    } else if (LADDERS[newPos]) {
-      state.players[p] = newPos;
-      drawBoard();
-      setMsg(`🪜 Kotak ${newPos} ada tangga! Jawab pertanyaan untuk naik!`);
-      openQuestion('ladder', LADDERS[newPos]);
-    } else {
-      openQuestion('normal', newPos);
-    }
-  }, 350);
+    openQuestion('normal', newPos);
+  }, 400);
 }
 
 function openQuestion(type, target) {
@@ -504,11 +857,12 @@ function openQuestion(type, target) {
   state.pendingQ = q;
 
   const labels = {
-    normal: `📜 Maju ke kotak ${target} — Jawab dengan benar!`,
-    ladder: `🪜 Tangga ke kotak ${target} — Jawab benar untuk naik!`,
-    snake: `🐍 Ular ke kotak ${target} — Jawab benar untuk selamat!`
+    normal: `Maju ke kotak ${target} — Jawab benar!`,
+    ladder: `Tangga ke kotak ${target} — Jawab benar untuk naik!`,
+    snake: `Ular ke kotak ${target} — Jawab benar untuk selamat!`
   };
-  document.getElementById('q-eyebrow').textContent = labels[type];
+  
+  document.getElementById('q-eyebrow').textContent = `${state.names[state.current]} - ${labels[type]}`;
   document.getElementById('q-text').textContent = q.q;
   document.getElementById('q-result').style.display = 'none';
   document.getElementById('q-result').className = '';
@@ -541,19 +895,15 @@ function answerQuestion(chosen) {
 
   const res = document.getElementById('q-result');
   res.style.display = 'block';
-  const type = state.pendingType;
-  const target = state.pendingTarget;
 
   if (correct) {
+    playSound('correct');
     res.className = 'benar';
-    if (type === 'ladder') res.textContent = '✅ Benar! Kamu naik tangga!';
-    else if (type === 'snake') res.textContent = '✅ Benar! Kamu selamat dari ular!';
-    else res.textContent = `✅ Benar! Maju ke kotak ${target}!`;
+    res.textContent = `✅ Benar! Jawaban kamu tepat sekali. Kamu berhak jalan sesuai angka dadu (${state.diceRoll} langkah)!`;
   } else {
+    playSound('wrong');
     res.className = 'salah';
-    if (type === 'ladder') res.textContent = '❌ Salah! Tidak bisa naik tangga, tetap di tempat.';
-    else if (type === 'snake') res.textContent = `❌ Salah! Dimakan ular, turun ke kotak ${target}!`;
-    else res.textContent = '❌ Salah! Kamu mundur ke kotak 1.';
+    res.textContent = `❌ Salah! Jawaban yang benar adalah: ${String.fromCharCode(65+q.a)}. ${q.c[q.a]}. Kamu tetap di tempat.`;
   }
 
   document.getElementById('q-next').style.display = 'block';
@@ -563,64 +913,231 @@ function continueGame() {
   document.getElementById('q-overlay').classList.remove('show');
   const p = state.current;
   const correct = state.pendingCorrect;
-  const type = state.pendingType;
   const target = state.pendingTarget;
 
-  if (type === 'normal') {
-    if (correct) {
-      state.players[p] = target;
-      if (target === 100) { drawBoard(); showWin(p); return; }
-      setMsg(`✅ Benar! Pemain ${p+1} maju ke kotak <strong>${target}</strong>.`);
+  if (correct) {
+    // Walk step-by-step
+    animatePlayerSteps(p, state.players[p], target, () => {
+      const finalPos = state.players[p];
+      if (SNAKES[finalPos]) {
+        setMsg(`🐍 Aduh! <strong>${state.names[p]}</strong> digigit ular di kotak ${finalPos} dan turun ke ${SNAKES[finalPos]}!`);
+        animateSlide(p, finalPos, SNAKES[finalPos], 'snake', 850, () => {
+          checkWinOrNext(p);
+        });
+      } else if (LADDERS[finalPos]) {
+        setMsg(`🪜 Hore! <strong>${state.names[p]}</strong> menemukan tangga di kotak ${finalPos} dan naik ke ${LADDERS[finalPos]}!`);
+        animateSlide(p, finalPos, LADDERS[finalPos], 'ladder', 850, () => {
+          checkWinOrNext(p);
+        });
+      } else {
+        checkWinOrNext(p);
+      }
+    });
+  } else {
+    setMsg(`❌ Jawaban salah! <strong>${state.names[p]}</strong> diam di posisinya (tetap di kotak ${state.players[p]}).`);
+    nextTurn();
+  }
+}
+
+function checkWinOrNext(p) {
+  if (state.players[p] === 100) {
+    showWin(p);
+  } else {
+    nextTurn();
+  }
+}
+
+// Animate moving one square by one square recursively
+function animatePlayerSteps(playerIdx, currentCell, targetCell, callback) {
+  if (currentCell === targetCell) {
+    callback();
+    return;
+  }
+  const nextCell = currentCell + 1;
+  animateSlide(playerIdx, currentCell, nextCell, 'dice', 220, () => {
+    animatePlayerSteps(playerIdx, nextCell, targetCell, callback);
+  });
+}
+
+function animateSlide(playerIdx, fromCell, toCell, soundType, duration, callback) {
+  if (soundType) playSound(soundType);
+  const startXY = cellToXY(fromCell);
+  const endXY = cellToXY(toCell);
+  const startTime = performance.now();
+  
+  function tick(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // easeInOutCubic
+    const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+    
+    const curX = startXY.x + (endXY.x - startXY.x) * ease;
+    const curY = startXY.y + (endXY.y - startXY.y) * ease;
+    
+    state.animatingPlayer = {
+      idx: playerIdx,
+      x: curX,
+      y: curY
+    };
+    
+    drawBoard();
+    
+    if (progress < 1) {
+      requestAnimationFrame(tick);
     } else {
-      state.players[p] = 1;
-      setMsg(`❌ Salah! Pemain ${p+1} mundur ke <strong>kotak 1</strong>.`);
-    }
-  } else if (type === 'ladder') {
-    if (correct) {
-      state.players[p] = target;
-      setMsg(`🪜 Pemain ${p+1} naik tangga ke kotak <strong>${target}</strong>!`);
-    } else {
-      setMsg(`❌ Pemain ${p+1} tidak bisa naik tangga, tetap di tempat.`);
-    }
-  } else if (type === 'snake') {
-    if (correct) {
-      setMsg(`✅ Pemain ${p+1} selamat dari ular!`);
-    } else {
-      state.players[p] = target;
-      setMsg(`🐍 Pemain ${p+1} dimakan ular, turun ke kotak <strong>${target}</strong>!`);
+      state.animatingPlayer = null;
+      state.players[playerIdx] = toCell;
+      drawBoard();
+      callback();
     }
   }
-
-  drawBoard();
-  nextTurn();
+  
+  requestAnimationFrame(tick);
 }
 
 function nextTurn() {
-  state.current = 1 - state.current;
+  state.current = (state.current + 1) % state.players.length;
   updateTurnBadge();
   state.phase = 'roll';
   document.getElementById('roll-btn').disabled = false;
+  setMsg(`Giliran <strong>${state.names[state.current]}</strong> untuk melempar dadu.`);
 }
 
 function showWin(p) {
   state.gameOver = true;
   document.getElementById('roll-btn').disabled = true;
-  document.getElementById('win-title').textContent = `Pemain ${p+1} Menang! 🎉`;
+  document.getElementById('win-title').textContent = `${state.names[p]} Menang! 🎉`;
+  playSound('win');
   document.getElementById('win-screen').classList.add('show');
 }
 
 function resetGame() {
-  state = { players:[1,1], current:0, phase:'roll', pendingTarget:0, pendingCorrect:false, pendingType:null, pendingQ:null, gameOver:false };
-  document.getElementById('roll-btn').disabled = false;
-  document.getElementById('dice-display').textContent = '🎲';
   document.getElementById('q-overlay').classList.remove('show');
   document.getElementById('win-screen').classList.remove('show');
-  setMsg('Lempar dadu untuk memulai permainan!');
-  updateTurnBadge();
-  drawBoard();
+  document.getElementById('setup-screen').style.display = 'flex';
 }
 
-drawBoard();
+// SETUP SCREEN INITIALIZATION
+function initSetupScreen() {
+  const container = document.getElementById('player-names-inputs');
+  const countButtons = document.querySelectorAll('.count-btn');
+  let currentCount = 2;
+  
+  function renderInputs(count) {
+    container.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      const color = PRESET_COLORS[i % PRESET_COLORS.length];
+      const div = document.createElement('div');
+      div.className = 'name-input-group';
+      div.innerHTML = `
+        <span class="color-badge" style="background-color: ${color.fill}; border: 1.5px solid ${color.stroke};"></span>
+        <input type="text" id="player-name-${i}" value="Pemain ${i+1}" placeholder="Nama Pemain ${i+1}" maxlength="12">
+      `;
+      container.appendChild(div);
+    }
+  }
+  
+  countButtons.forEach(btn => {
+    btn.onclick = () => {
+      countButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCount = parseInt(btn.getAttribute('data-count'));
+      renderInputs(currentCount);
+    };
+  });
+  
+  // Initial render with 2 players
+  renderInputs(2);
+}
+
+function renderPlayerSideBadges() {
+  const container = document.querySelector('.player-row');
+  container.innerHTML = '';
+  state.players.forEach((pos, idx) => {
+    const badge = document.createElement('div');
+    badge.className = `pbadge ${idx === state.current ? 'active' : ''}`;
+    badge.id = `badge-p${idx}`;
+    badge.style.color = state.colors[idx].stroke;
+    badge.style.background = state.colors[idx].fill + '22';
+    badge.style.borderColor = state.colors[idx].fill;
+    
+    badge.innerHTML = `
+      <span class="dot" style="background-color: ${state.colors[idx].fill}"></span>
+      <span style="font-weight: 600;">${state.names[idx]}</span>
+      <span class="pos" style="margin-left: auto; font-size: 12px; background: ${state.colors[idx].fill}33; padding: 1px 7px; border-radius: 20px; color: ${state.colors[idx].stroke};">Kotak <span id="p${idx}-pos">${pos}</span></span>
+    `;
+    container.appendChild(badge);
+  });
+}
+
+function renderLegend() {
+  const legendList = document.getElementById('legend-list');
+  legendList.innerHTML = `
+    <div class="leg"><span class="leg-sym">🐍</span> Ular (turun)</div>
+    <div class="leg"><span class="leg-sym">🪜</span> Tangga (naik)</div>
+  `;
+  state.players.forEach((_, idx) => {
+    const leg = document.createElement('div');
+    leg.className = 'leg';
+    leg.innerHTML = `<span class="leg-sym" style="color:${state.colors[idx].fill}">●</span> ${state.names[idx]}`;
+    legendList.appendChild(leg);
+  });
+}
+
+function startGameFromSetup() {
+  const countBtn = document.querySelector('.count-btn.active');
+  const count = parseInt(countBtn.getAttribute('data-count'));
+  
+  state.players = [];
+  state.names = [];
+  state.colors = [];
+  
+  for (let i = 0; i < count; i++) {
+    state.players.push(1);
+    const nameInput = document.getElementById(`player-name-${i}`);
+    const name = nameInput.value.trim() || `Pemain ${i+1}`;
+    state.names.push(name);
+    state.colors.push(PRESET_COLORS[i % PRESET_COLORS.length]);
+  }
+  
+  state.current = 0;
+  state.phase = 'roll';
+  state.gameOver = false;
+  state.animatingPlayer = null;
+  
+  // Hide setup screen
+  document.getElementById('setup-screen').style.display = 'none';
+  
+  // Dynamic header badge
+  document.getElementById('player-count-badge').textContent = `${count} Pemain`;
+  
+  // Render side badges
+  renderPlayerSideBadges();
+  
+  // Render legend
+  renderLegend();
+  
+  // Update control button
+  updateTurnBadge();
+  document.getElementById('roll-btn').disabled = false;
+  document.getElementById('dice-display').textContent = '🎲';
+  
+  setMsg(`Permainan dimulai! Giliran <strong>${state.names[0]}</strong> untuk melempar dadu.`);
+  
+  // Draw board
+  drawBoard();
+  
+  // Initialize audio
+  initAudio();
+}
+
+// Window load trigger
+window.onload = () => {
+  initSetupScreen();
+  // Draw an initial clean empty board just in case
+  drawBoard();
+};
 </script>
 </body>
 </html>
