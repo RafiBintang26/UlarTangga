@@ -11,6 +11,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* Root untuk Tema Gelap (Default kuno) */
     :root {
       --red:     #ef4444; --red-d:   #b91c1c; --red-l:   #fee2e2;
       --green:  #10b981; --green-d: #047857; --green-l: #d1fae5;
@@ -18,6 +19,8 @@
       --yellow: #f59e0b; --yellow-d:#b45309; --yellow-l:#fef3c7;
       --purple: #8b5cf6; --purple-d:#6d28d9; --purple-l:#ede9fe;
       --pink:   #ec4899; --pink-d:  #be185d; --pink-l:  #fce7f3;
+      
+      /* Variabel dinamis tema gelap */
       --bg:     #0f0f1a;
       --bg2:    #161628;
       --surface:#1e1e35;
@@ -25,7 +28,28 @@
       --border: rgba(255,255,255,0.08);
       --text:   #f0f0ff;
       --muted:  #888aaa;
+      --header-bg: linear-gradient(135deg, rgba(30,30,60,0.95) 0%, rgba(20,20,45,0.98) 100%);
+      --gradient-overlay: radial-gradient(ellipse 80% 50% at 20% 10%, rgba(139,92,246,0.15) 0%, transparent 60%),
+                          radial-gradient(ellipse 60% 40% at 80% 80%, rgba(59,130,246,0.12) 0%, transparent 60%),
+                          radial-gradient(ellipse 50% 60% at 60% 30%, rgba(16,185,129,0.08) 0%, transparent 50%);
+      
       --font:   'Plus Jakarta Sans', sans-serif;
+      --canvas-bg: #0f0f20;
+    }
+
+    /* Root untuk Tema Terang */
+    [data-theme="light"] {
+      --bg:     #f4f4f9;
+      --bg2:    #eef0f6;
+      --surface:#ffffff;
+      --card:   rgba(0,0,0,0.03);
+      --border: rgba(0,0,0,0.08);
+      --text:   #1e1e30;
+      --muted:  #62647a;
+      --header-bg: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,242,248,0.98) 100%);
+      --gradient-overlay: radial-gradient(ellipse 80% 50% at 20% 10%, rgba(139,92,246,0.08) 0%, transparent 60%),
+                          radial-gradient(ellipse 60% 40% at 80% 80%, rgba(59,130,246,0.06) 0%, transparent 60%);
+      --canvas-bg: #f8f9fa;
     }
 
     body {
@@ -34,28 +58,28 @@
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
     }
 
     body::before {
       content: '';
       position: fixed; inset: 0; z-index: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(139,92,246,0.15) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(59,130,246,0.12) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 60% at 60% 30%, rgba(16,185,129,0.08) 0%, transparent 50%);
+      background: var(--gradient-overlay);
       pointer-events: none;
     }
 
     /* HEADER */
     header {
       position: relative; z-index: 10;
-      background: linear-gradient(135deg, rgba(30,30,60,0.95) 0%, rgba(20,20,45,0.98) 100%);
+      background: var(--header-bg);
       border-bottom: 1px solid var(--border);
       padding: 16px 24px 14px;
       display: flex; align-items: center; justify-content: space-between;
       backdrop-filter: blur(20px);
+      transition: background 0.3s;
     }
     .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-right { display: flex; align-items: center; gap: 16px; }
     .header-logo {
       width: 46px; height: 46px; border-radius: 14px;
       background: linear-gradient(135deg, #7c3aed, #3b82f6);
@@ -69,8 +93,29 @@
     .hbadge {
       font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
       padding: 4px 10px; border-radius: 20px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(128,128,128,0.08);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    /* Toggle Theme Button */
+    .theme-toggle {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover {
+      background: rgba(128,128,128,0.15);
     }
 
     /* LAYOUT */
@@ -85,11 +130,11 @@
     /* BOARD */
     #board-section {
       flex: 0 0 auto;
-      background: rgba(255,255,255,0.03);
+      background: var(--card);
       border-radius: 20px;
       padding: 12px;
       border: 1px solid var(--border);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05) inset;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.02) inset;
     }
     canvas#board { display: block; border-radius: 12px; cursor: default; }
 
@@ -97,10 +142,11 @@
     #side { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 12px; }
 
     .card {
-      background: var(--card);
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 16px; padding: 14px 16px;
       backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
     .card-label {
       font-size: 10px; font-weight: 700; letter-spacing: 2px;
@@ -122,14 +168,14 @@
     .pbadge .pname { font-weight: 700; flex: 1; }
     .pbadge .pos-chip {
       font-size: 11px; padding: 2px 9px; border-radius: 20px;
-      font-weight: 700; background: rgba(255,255,255,0.08);
+      font-weight: 700; background: rgba(128,128,128,0.1);
     }
-    .pbadge.active { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.07); transform: translateX(4px); }
+    .pbadge.active { border-color: rgba(128,128,128,0.25); background: rgba(128,128,128,0.08); transform: translateX(4px); }
 
     /* Dice */
     #dice-display {
       font-size: 54px; text-align: center; line-height: 1; padding: 4px 0;
-      filter: drop-shadow(0 0 12px rgba(255,200,0,0.4));
+      filter: drop-shadow(0 0 12px rgba(255,200,0,0.3));
       transition: transform 0.1s;
     }
     #dice-display.rolling { animation: diceShake 0.08s infinite; }
@@ -148,13 +194,13 @@
     }
     .btn-primary {
       background: linear-gradient(135deg, #7c3aed, #3b82f6); color: #fff;
-      box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+      box-shadow: 0 4px 20px rgba(124,58,237,0.3);
     }
-    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(124,58,237,0.55); }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(124,58,237,0.45); }
     .btn-primary:active:not(:disabled) { transform: translateY(0); }
-    .btn-primary:disabled { background: rgba(255,255,255,0.08); color: var(--muted); box-shadow: none; cursor: not-allowed; }
-    .btn-ghost { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
-    .btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+    .btn-primary:disabled { background: rgba(128,128,128,0.12); color: var(--muted); box-shadow: none; cursor: not-allowed; }
+    .btn-ghost { background: var(--card); color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { background: rgba(128,128,128,0.1); color: var(--text); }
 
     /* Score */
     .score-row {
@@ -167,7 +213,7 @@
     /* QUESTION MODAL */
     #q-overlay {
       display: none; position: fixed; inset: 0;
-      background: rgba(5,5,20,0.8); backdrop-filter: blur(8px);
+      background: rgba(5,5,20,0.6); backdrop-filter: blur(8px);
       z-index: 200; align-items: center; justify-content: center;
       padding: 16px;
     }
@@ -176,7 +222,7 @@
     #q-box {
       background: var(--surface); border-radius: 24px;
       max-width: 480px; width: 100%;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.3), 0 0 0 1px var(--border);
       position: relative; overflow: hidden;
       animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
     }
@@ -193,7 +239,7 @@
       font-size: 22px; flex-shrink: 0;
     }
     #q-subject-name { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px; }
-    #q-eyebrow { font-size: 13px; font-weight: 600; opacity: 0.7; }
+    #q-eyebrow { font-size: 13px; font-weight: 600; opacity: 0.7; color: var(--text); }
     #q-body { padding: 0 24px 24px; }
     #q-text { font-family: 'Lora', serif; font-size: 16px; line-height: 1.6; color: var(--text); margin-bottom: 18px; font-weight: 600; }
 
@@ -201,50 +247,55 @@
     .q-choice {
       text-align: left; font-size: 13px; font-weight: 500;
       padding: 12px 16px; border-radius: 12px;
-      border: 1.5px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04); color: var(--text);
+      border: 1.5px solid var(--border);
+      background: var(--card); color: var(--text);
       cursor: pointer; transition: all 0.15s; font-family: var(--font); width: 100%;
       display: flex; align-items: center; gap: 10px;
     }
     .q-choice .opt-letter {
       width: 26px; height: 26px; border-radius: 8px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(128,128,128,0.15);
+      color: var(--text);
       display: flex; align-items: center; justify-content: center;
       font-weight: 700; font-size: 11px; flex-shrink: 0;
     }
-    .q-choice:hover:not(:disabled) { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.09); transform: translateX(4px); }
-    .q-choice.correct { background: rgba(16,185,129,0.15) !important; border-color: var(--green) !important; color: #6ee7b7 !important; }
+    .q-choice:hover:not(:disabled) { border-color: rgba(128,128,128,0.4); background: rgba(128,128,128,0.08); transform: translateX(4px); }
+    .q-choice.correct { background: rgba(16,185,129,0.15) !important; border-color: var(--green) !important; color: #10b981 !important; }
+    [data-theme="light"] .q-choice.correct { color: #047857 !important; font-weight: 700; }
     .q-choice.correct .opt-letter { background: var(--green); color: #fff; }
-    .q-choice.wrong { background: rgba(239,68,68,0.12) !important; border-color: var(--red) !important; color: #fca5a5 !important; }
+    .q-choice.wrong { background: rgba(239,68,68,0.12) !important; border-color: var(--red) !important; color: #ef4444 !important; }
+    [data-theme="light"] .q-choice.wrong { color: #b91c1c !important; font-weight: 700; }
     .q-choice.wrong .opt-letter { background: var(--red); color: #fff; }
 
     #q-result {
       font-size: 13px; margin-top: 14px; padding: 12px 16px;
       border-radius: 12px; display: none; line-height: 1.6; font-weight: 500;
     }
-    #q-result.benar { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
-    #q-result.salah { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+    #q-result.benar { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+    [data-theme="light"] #q-result.benar { color: #047857; }
+    #q-result.salah { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+    [data-theme="light"] #q-result.salah { color: #b91c1c; }
     #q-next { margin-top: 14px; display: none; }
 
     /* WIN SCREEN */
     #win-screen {
       display: none; position: fixed; inset: 0;
-      background: rgba(5,5,20,0.85); backdrop-filter: blur(10px);
+      background: rgba(5,5,20,0.7); backdrop-filter: blur(10px);
       z-index: 300; align-items: center; justify-content: center;
     }
     #win-screen.show { display: flex; }
     #win-box {
       background: var(--surface); border-radius: 28px; padding: 48px 36px;
       text-align: center; max-width: 360px; width: 90%;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.4), 0 0 0 1px var(--border);
       animation: slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);
     }
     .win-trophy { font-size: 72px; margin-bottom: 12px; animation: bounce 0.8s ease infinite alternate; }
     @keyframes bounce { from { transform: scale(1); } to { transform: scale(1.1) rotate(5deg); } }
-    #win-box h2 { font-family: 'Lora', serif; font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+    #win-box h2 { font-family: 'Lora', serif; font-size: 26px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
     #win-box p { font-size: 14px; color: var(--muted); margin-bottom: 28px; line-height: 1.5; }
     .win-score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px; }
-    .win-score-item { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
+    .win-score-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
     .win-score-item .ws-val { font-size: 22px; font-weight: 800; }
     .win-score-item .ws-lbl { font-size: 10px; color: var(--muted); letter-spacing: 0.5px; margin-top: 2px; }
 
@@ -253,19 +304,18 @@
       position: fixed; inset: 0; z-index: 500; background: var(--bg);
       display: flex; align-items: center; justify-content: center;
       padding: 16px; overflow-y: auto;
+      transition: background 0.3s;
     }
     #setup-screen::before {
       content: ''; position: fixed; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(139,92,246,0.2) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(59,130,246,0.15) 0%, transparent 60%);
+      background: var(--gradient-overlay);
       pointer-events: none;
     }
     .setup-box {
       position: relative; z-index: 1;
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      background: var(--surface); border: 1px solid var(--border);
       border-radius: 28px; padding: 36px 32px; max-width: 520px; width: 100%;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05) inset;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.2);
       text-align: center; backdrop-filter: blur(20px);
     }
     .setup-logo {
@@ -279,7 +329,7 @@
     @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
     .setup-box h2 {
       font-family: 'Lora', serif; font-size: 28px; font-weight: 700; margin-bottom: 8px;
-      background: linear-gradient(135deg, #e0e0ff, #a78bfa);
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .setup-box .desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 28px; }
@@ -288,17 +338,17 @@
     .setup-section label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
     .count-selector { display: flex; gap: 8px; }
     .count-btn {
-      flex: 1; padding: 11px; background: rgba(255,255,255,0.04);
-      border: 1.5px solid rgba(255,255,255,0.08); border-radius: 10px;
+      flex: 1; padding: 11px; background: var(--card);
+      border: 1.5px solid var(--border); border-radius: 10px;
       font-weight: 700; font-size: 14px; cursor: pointer; color: var(--muted);
       transition: all 0.15s; font-family: var(--font);
     }
-    .count-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+    .count-btn:hover { border-color: rgba(128,128,128,0.3); color: var(--text); }
     .count-btn.active { background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(59,130,246,0.3)); border-color: rgba(139,92,246,0.6); color: var(--text); }
     .names-container { display: flex; flex-direction: column; gap: 10px; }
     .name-row {
       display: flex; align-items: center; gap: 10px;
-      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+      background: var(--card); border: 1px solid var(--border);
       border-radius: 12px; padding: 10px 14px; transition: all 0.15s;
     }
     .name-row:focus-within { border-color: rgba(139,92,246,0.5); box-shadow: 0 0 0 3px rgba(139,92,246,0.15); }
@@ -310,26 +360,27 @@
       main { flex-direction: column; padding: 12px; }
       #side { min-width: 0; width: 100%; }
       canvas#board { width: 100%; height: auto; }
-      header { flex-direction: column; gap: 10px; align-items: flex-start; }
+      header { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .header-right { width: 100%; justify-content: space-between; }
     }
 
     /* Subject preview chips */
-    .subjects-preview { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 8px; }
+    .subjects-preview { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 18px; }
     .sp-chip { display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
-    .sp-chip--math   { background: rgba(245,158,11,0.2);  color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
-    .sp-chip--ipa    { background: rgba(16,185,129,0.2);  color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
-    .sp-chip--ips    { background: rgba(59,130,246,0.2);  color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
-    .sp-chip--bindo  { background: rgba(236,72,153,0.2);  color: #f9a8d4; border: 1px solid rgba(236,72,153,0.3); }
-    .sp-chip--pkn    { background: rgba(139,92,246,0.2);  color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
+    .sp-chip--math   { background: rgba(245,158,11,0.2);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .sp-chip--ipa    { background: rgba(16,185,129,0.2);  color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+    .sp-chip--ips    { background: rgba(59,130,246,0.2);  color: #3b82f6; border: 1px solid rgba(59,130,246,0.3); }
+    .sp-chip--bindo  { background: rgba(236,72,153,0.2);  color: #ec4899; border: 1px solid rgba(236,72,153,0.3); }
+    .sp-chip--pkn    { background: rgba(139,92,246,0.2);  color: #8b5cf6; border: 1px solid rgba(139,92,246,0.3); }
 
     /* Sidebar subject pills */
     .subj-pills { display: flex; flex-direction: column; gap: 6px; }
     .subj-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
-    .subj-pill--math  { background: rgba(245,158,11,0.15);  color: #fcd34d; }
-    .subj-pill--ipa   { background: rgba(16,185,129,0.15);  color: #6ee7b7; }
-    .subj-pill--ips   { background: rgba(59,130,246,0.15);  color: #93c5fd; }
-    .subj-pill--bindo { background: rgba(236,72,153,0.15);  color: #f9a8d4; }
-    .subj-pill--pkn   { background: rgba(139,92,246,0.15);  color: #c4b5fd; }
+    .subj-pill--math  { background: rgba(245,158,11,0.15);  color: #f59e0b; }
+    .subj-pill--ipa   { background: rgba(16,185,129,0.15);  color: #10b981; }
+    .subj-pill--ips   { background: rgba(59,130,246,0.15);  color: #3b82f6; }
+    .subj-pill--bindo { background: rgba(236,72,153,0.15);  color: #ec4899; }
+    .subj-pill--pkn   { background: rgba(139,92,246,0.15);  color: #8b5cf6; }
 
     /* How-to card */
     .card--howto { font-size: 12px; color: var(--muted); line-height: 1.8; }
@@ -341,6 +392,9 @@
 
   <div id="setup-screen">
     <div class="setup-box">
+      <div style="position: absolute; top: 16px; right: 16px;">
+         <button class="theme-toggle" onclick="toggleTheme()">🌓 Mode</button>
+      </div>
       <div class="setup-logo">🎓</div>
       <h2>Ular Tangga Edukasi</h2>
       <p class="desc">Game edukasi seru untuk siswa SD! Jawab pertanyaan dari berbagai mata pelajaran untuk bisa maju di papan permainan.</p>
@@ -381,10 +435,13 @@
         <div class="header-sub">Multi Mata Pelajaran</div>
       </div>
     </div>
-    <div class="header-badges">
-      <span class="hbadge" id="player-count-badge">2 Pemain</span>
-      <span class="hbadge">10×10 Papan</span>
-      <span class="hbadge">5 Mapel</span>
+    <div class="header-right">
+      <div class="header-badges">
+        <span class="hbadge" id="player-count-badge">2 Pemain</span>
+        <span class="hbadge">10×10 Papan</span>
+        <span class="hbadge">5 Mapel</span>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 Ganti Tema</button>
     </div>
   </header>
 
@@ -479,7 +536,7 @@
       mat: {
         name: 'Matematika', icon: '📐',
         color: '#f59e0b', colorLight: 'rgba(245,158,11,0.18)',
-        textColor: '#fcd34d',
+        textColor: '#f59e0b',
         questions: [
           { q:"Berapakah hasil dari 8 × 7?", c:["54","56","58","64"], a:1 },
           { q:"Berapakah 144 ÷ 12?", c:["10","11","12","13"], a:2 },
@@ -501,7 +558,7 @@
       ipa: {
         name: 'IPA', icon: '🔬',
         color: '#10b981', colorLight: 'rgba(16,185,129,0.18)',
-        textColor: '#6ee7b7',
+        textColor: '#10b981',
         questions: [
           { q:"Planet manakah yang terdekat dari Matahari?", c:["Venus","Bumi","Merkurius","Mars"], a:2 },
           { q:"Proses perubahan air menjadi uap air disebut...", c:["Kondensasi","Evaporasi","Presipitasi","Infiltrasi"], a:1 },
@@ -523,7 +580,7 @@
       ips: {
         name: 'IPS', icon: '🌏',
         color: '#3b82f6', colorLight: 'rgba(59,130,246,0.18)',
-        textColor: '#93c5fd',
+        textColor: '#3b82f6',
         questions: [
           { q:"Ibukota negara Indonesia adalah...", c:["Surabaya","Bandung","Jakarta","Medan"], a:2 },
           { q:"Kapan Indonesia memproklamasikan kemerdekaannya?", c:["17 Agustus 1945","17 Agustus 1946","15 Agustus 1945","20 Oktober 1945"], a:0 },
@@ -545,7 +602,7 @@
       bind: {
         name: 'B. Indonesia', icon: '📖',
         color: '#ec4899', colorLight: 'rgba(236,72,153,0.18)',
-        textColor: '#f9a8d4',
+        textColor: '#ec4899',
         questions: [
           { q:"Kalimat yang menyatakan permintaan atau perintah disebut kalimat...", c:["Berita","Tanya","Perintah","Seru"], a:2 },
           { q:"Kata yang bermakna sama atau hampir sama disebut...", c:["Antonim","Sinonim","Homonim","Polisem"], a:1 },
@@ -567,7 +624,7 @@
       pkn: {
         name: 'PKn', icon: '🇮🇩',
         color: '#8b5cf6', colorLight: 'rgba(139,92,246,0.18)',
-        textColor: '#c4b5fd',
+        textColor: '#8b5cf6',
         questions: [
           { q:"Dasar negara Indonesia adalah...", c:["UUD 1945","Pancasila","Sumpah Pemuda","Proklamasi"], a:1 },
           { q:"Sila pertama Pancasila berbunyi...", c:["Kemanusiaan yang adil dan beradab","Persatuan Indonesia","Ketuhanan Yang Maha Esa","Kerakyatan yang dipimpin oleh hikmat"], a:2 },
@@ -615,6 +672,21 @@
       gameOver: false, diceRoll: 1, animatingPlayer: null,
       scores: []
     };
+
+    // ── FITUR TOGGLE TEMA (DARK/LIGHT) ──
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const targetTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', targetTheme);
+      localStorage.setItem('theme', targetTheme);
+      drawBoard(); // Melukis ulang papan untuk mendeteksi warna latar canvas baru
+    }
+
+    // Mengembalikan tema pilihan pengguna jika tersimpan sebelumnya
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
 
     // ── AUDIO ──
     let audioCtx = null;
@@ -686,7 +758,10 @@
 
     function drawBoard() {
       ctx.clearRect(0, 0, 500, 500);
-      ctx.fillStyle = '#0f0f20';
+      
+      // Mengambil warna dinamis dari CSS variable --canvas-bg
+      const currentCanvasBg = getComputedStyle(document.documentElement).getPropertyValue('--canvas-bg').trim();
+      ctx.fillStyle = currentCanvasBg;
       ctx.beginPath();
       ctx.roundRect(0, 0, 500, 500, 12);
       ctx.fill();
@@ -724,11 +799,11 @@
 
         if (i === 100) {
           ctx.font = '24px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-          ctx.fillText('\u2B50', x, y);
+          ctx.fillText('🏆', x, y);
         }
       }
 
-      // 🐍 MELUKIS ULAR REALISTIS 3D
+      // 🐍 MELUKIS ULAR REALISTIS 3D (TETAP SAMA)
       Object.entries(SNAKES).forEach(([head, tail]) => {
         const h = cellToXY(+head), t2 = cellToXY(+tail);
         
@@ -739,7 +814,6 @@
         const cp2x = h.x + dx * 0.75 + (dy > 0 ? -35 : 35);
         const cp2y = h.y + dy * 0.75;
 
-        // Lidah Ular Bercabang Merah
         ctx.strokeStyle = '#ef4444';
         ctx.lineWidth = 3;
         ctx.lineCap = 'round';
@@ -755,7 +829,6 @@
         ctx.lineTo(tx - Math.cos(angle - 0.4) * 5, ty - Math.sin(angle - 0.4) * 5);
         ctx.stroke();
 
-        // Tubuh Bergradasi Mengecil (Kepala -> Ekor) + Pola Sisik Belang
         const steps = 40;
         for (let s = steps; s >= 0; s--) {
           const t = s / steps;
@@ -769,13 +842,11 @@
           ctx.fill();
         }
 
-        // Kepala Ular Bulat Oval
         ctx.fillStyle = '#166534';
         ctx.beginPath();
         ctx.arc(h.x, h.y, 9.5, 0, Math.PI * 2);
         ctx.fill();
 
-        // Sepasang Mata Putih-Hitam Detil
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
         ctx.arc(h.x - 3, h.y - 2, 3, 0, Math.PI * 2);
@@ -788,7 +859,7 @@
         ctx.fill();
       });
 
-      // 🪜 MELUKIS TANGGA KAYU 3D COKELAT KLASIK
+      // 🪜 MELUKIS TANGGA KAYU 3D COKELAT KLASIK (TETAP SAMA)
       ctx.shadowBlur = 0;
       Object.entries(LADDERS).forEach(([bottom, top]) => {
         const b = cellToXY(+bottom), t2 = cellToXY(+top);
@@ -802,26 +873,22 @@
 
         ctx.lineCap = 'square';
         
-        // Tiang Penyangga Kiri & Kanan (Lapisan Bayangan)
         ctx.strokeStyle = '#451a03'; 
         ctx.lineWidth = 6;
         ctx.beginPath(); ctx.moveTo(b.x + nx, b.y + ny); ctx.lineTo(t2.x + nx, t2.y + ny); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(b.x - nx, b.y - ny); ctx.lineTo(t2.x - nx, t2.y - ny); ctx.stroke();
 
-        // Tiang Penyangga Kiri & Kanan (Lapisan Atas/Terang)
         ctx.strokeStyle = '#78350f'; 
         ctx.lineWidth = 4;
         ctx.beginPath(); ctx.moveTo(b.x + nx, b.y + ny); ctx.lineTo(t2.x + nx, t2.y + ny); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(b.x - nx, b.y - ny); ctx.lineTo(t2.x - nx, t2.y - ny); ctx.stroke();
 
-        // Anak Tangga Horizontal
         const stepCount = Math.max(4, Math.floor(len / 18));
         for (let s = 1; s < stepCount; s++) {
           const ratio = s / stepCount;
           const rx = b.x + dx * ratio;
           const ry = b.y + dy * ratio;
 
-          // Efek Bayangan Anak Tangga
           ctx.strokeStyle = '#451a03';
           ctx.lineWidth = 3.5;
           ctx.beginPath();
@@ -829,7 +896,6 @@
           ctx.lineTo(rx - nx * 0.9, ry - ny * 0.9 + 1);
           ctx.stroke();
 
-          // Tekstur Kayu Cerah Anak Tangga
           ctx.strokeStyle = '#a16207';
           ctx.beginPath();
           ctx.moveTo(rx + nx * 0.9, ry + ny * 0.9);
@@ -896,7 +962,7 @@
         badge.style.cssText = 'color:'+c.fill+';background:'+c.fill+'18;border-color:'+(idx===state.current?c.fill:'transparent');
         badge.innerHTML =
           '<span class="dot" style="background:'+c.fill+';box-shadow:0 0 8px '+c.glow+'"></span>' +
-          '<span class="pname">'+state.names[idx]+'</span>' +
+          '<span class="pname" style="color:var(--text)">'+state.names[idx]+'</span>' +
           '<span class="pos-chip" style="background:'+c.fill+'22;color:'+c.fill+'">Kotak <span id="p'+idx+'-pos">'+pos+'</span></span>';
         container.appendChild(badge);
       });
