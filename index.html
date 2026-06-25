@@ -7,7 +7,7 @@
   <title>Ular Tangga Edukasi SD – Multi Mata Pelajaran</title>
   <meta name="description" content="Game edukatif Ular Tangga dengan berbagai mata pelajaran untuk siswa SD. Jawab pertanyaan dari Matematika, IPA, IPS, Bahasa Indonesia, dan PKn!">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&family=Lora:ital,wght=0,600;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -409,7 +409,7 @@
         <div id="msg-box">Silakan mulai permainan!</div>
       </div>
 
-      <button class="btn btn-primary" id="roll-btn" onclick="rollDice()">🎲 Lempar Dadu</button>
+      <button class="btn btn-primary" id="roll-btn" onclick="rollDice()">🎲 Lempar Dadu (Pemain 1)</button>
       <button class="btn btn-ghost" onclick="resetGame()">↺ Main Ulang</button>
 
       <div class="card">
@@ -590,22 +590,21 @@
 
     const SUBJECT_KEYS = Object.keys(SUBJECTS);
 
-    // Palet warna cerah gradasi untuk papan uler tangga
     const BOARD_COLORS = [
-      { main: '#ff5f6d', light: '#ffc3a0' }, // Kategori 1 (Merah/Pink)
-      { main: '#ffbc42', light: '#fff4e0' }, // Kategori 2 (Kuning/Oranye)
-      { main: '#38ef7d', light: '#11998e' }, // Kategori 3 (Hijau Cerah)
-      { main: '#00c6ff', light: '#0072ff' }, // Kategori 4 (Biru Muda)
-      { main: '#ea00d9', light: '#711c91' }  // Kategori 5 (Ungu/Magenta)
+      { main: '#ff5f6d', light: '#ffc3a0' }, 
+      { main: '#ffbc42', light: '#fff4e0' }, 
+      { main: '#38ef7d', light: '#11998e' }, 
+      { main: '#00c6ff', light: '#0072ff' }, 
+      { main: '#ea00d9', light: '#711c91' }  
     ];
 
     const PRESET_COLORS = [
-      { name:'Merah',  fill:'#ef4444', stroke:'#b91c1c', glow:'rgba(239,68,68,0.5)'  },
-      { name:'Biru',   fill:'#3b82f6', stroke:'#1d4ed8', glow:'rgba(59,130,246,0.5)' },
-      { name:'Hijau',  fill:'#10b981', stroke:'#047857', glow:'rgba(16,185,129,0.5)' },
-      { name:'Kuning', fill:'#f59e0b', stroke:'#b45309', glow:'rgba(245,158,11,0.5)' },
-      { name:'Ungu',   fill:'#8b5cf6', stroke:'#6d28d9', glow:'rgba(139,92,246,0.5)' },
-      { name:'Pink',   fill:'#ec4899', stroke:'#be185d', glow:'rgba(236,72,153,0.5)' },
+      { name:'Merah',   fill:'#ef4444', stroke:'#b91c1c', glow:'rgba(239,68,68,0.5)'  },
+      { name:'Biru',    fill:'#3b82f6', stroke:'#1d4ed8', glow:'rgba(59,130,246,0.5)' },
+      { name:'Hijau',   fill:'#10b981', stroke:'#047857', glow:'rgba(16,185,129,0.5)' },
+      { name:'Kuning',  fill:'#f59e0b', stroke:'#b45309', glow:'rgba(245,158,11,0.5)' },
+      { name:'Ungu',    fill:'#8b5cf6', stroke:'#6d28d9', glow:'rgba(139,92,246,0.5)' },
+      { name:'Pink',    fill:'#ec4899', stroke:'#be185d', glow:'rgba(236,72,153,0.5)' },
     ];
 
     let state = {
@@ -696,10 +695,8 @@
         const { x, y } = cellToXY(i);
         const cx = x - CELL / 2, cy = y - CELL / 2;
 
-        // Pewarnaan kotak berselang-seling cerah menggunakan array BOARD_COLORS
         const colorSet = BOARD_COLORS[(i - 1) % BOARD_COLORS.length];
         
-        // Buat efek gradasi warna linear yang estetik dari pojok kiri atas ke kanan bawah kotak
         const gradient = ctx.createLinearGradient(cx, cy, cx + CELL, cy + CELL);
         gradient.addColorStop(0, colorSet.main);
         gradient.addColorStop(1, colorSet.light);
@@ -707,23 +704,20 @@
         ctx.fillStyle = gradient;
         ctx.fillRect(cx, cy, CELL, CELL);
 
-        // Highlight tipis transparan jika kotak tersebut memiliki ular atau tangga
         if (SNAKE_CELLS.includes(i)) {
-          ctx.fillStyle = 'rgba(239,68,68,0.2)';
+          ctx.fillStyle = 'rgba(239,68,68,0.15)';
           ctx.fillRect(cx, cy, CELL, CELL);
         }
         if (LADDER_CELLS.includes(i)) {
-          ctx.fillStyle = 'rgba(16,185,129,0.2)';
+          ctx.fillStyle = 'rgba(16,185,129,0.15)';
           ctx.fillRect(cx, cy, CELL, CELL);
         }
 
-        // Garis batas antar-kotak agar terlihat rapi dan kontras
         ctx.strokeStyle = 'rgba(255,255,255,0.4)';
         ctx.lineWidth = 1.5;
         ctx.strokeRect(cx, cy, CELL, CELL);
 
-        // Angka nomor kotak papan
-        ctx.fillStyle = '#000000'; // Warna hitam pekat agar kontras dengan warna cerah kotak
+        ctx.fillStyle = '#000000'; 
         ctx.font = 'bold 11px Plus Jakarta Sans, sans-serif';
         ctx.textAlign = 'left'; ctx.textBaseline = 'top';
         ctx.fillText(i, cx + 5, cy + 5);
@@ -734,41 +728,114 @@
         }
       }
 
-      // Melukis Ular
+      // 🐍 MELUKIS ULAR REALISTIS 3D
       Object.entries(SNAKES).forEach(([head, tail]) => {
         const h = cellToXY(+head), t2 = cellToXY(+tail);
-        const mx = (h.x + t2.x) / 2 + (h.x > t2.x ? 22 : -22);
-        const my = (h.y + t2.y) / 2;
-        ctx.shadowColor = '#000'; ctx.shadowBlur = 4;
+        
+        const dx = t2.x - h.x;
+        const dy = t2.y - h.y;
+        const cp1x = h.x + dx * 0.25 + (dy > 0 ? 35 : -35);
+        const cp1y = h.y + dy * 0.25;
+        const cp2x = h.x + dx * 0.75 + (dy > 0 ? -35 : 35);
+        const cp2y = h.y + dy * 0.75;
+
+        // Lidah Ular Bercabang Merah
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
         ctx.beginPath();
+        const angle = Math.atan2(cp1y - h.y, cp1x - h.x);
+        const tongueLen = 15;
+        const tx = h.x - Math.cos(angle) * tongueLen;
+        const ty = h.y - Math.sin(angle) * tongueLen;
         ctx.moveTo(h.x, h.y);
-        ctx.quadraticCurveTo(mx, my, t2.x, t2.y);
-        ctx.strokeStyle = '#dc2626'; // Merah solid mencolok
-        ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.setLineDash([]); ctx.stroke();
-        ctx.shadowBlur = 0;
-        ctx.font = '22px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText('\uD83D\uDC0D', h.x, h.y);
+        ctx.lineTo(tx, ty);
+        ctx.lineTo(tx - Math.cos(angle + 0.4) * 5, ty - Math.sin(angle + 0.4) * 5);
+        ctx.moveTo(tx, ty);
+        ctx.lineTo(tx - Math.cos(angle - 0.4) * 5, ty - Math.sin(angle - 0.4) * 5);
+        ctx.stroke();
+
+        // Tubuh Bergradasi Mengecil (Kepala -> Ekor) + Pola Sisik Belang
+        const steps = 40;
+        for (let s = steps; s >= 0; s--) {
+          const t = s / steps;
+          const cxPos = Math.pow(1-t, 3)*h.x + 3*Math.pow(1-t, 2)*t*cp1x + 3*(1-t)*Math.pow(t, 2)*cp2x + Math.pow(t, 3)*t2.x;
+          const cyPos = Math.pow(1-t, 3)*h.y + 3*Math.pow(1-t, 2)*t*cp1y + 3*(1-t)*Math.pow(t, 2)*cp2y + Math.pow(t, 3)*t2.y;
+          const thickness = 14 * (1 - t * 0.7);
+
+          ctx.fillStyle = s % 2 === 0 ? '#15803d' : '#22c55e'; 
+          ctx.beginPath();
+          ctx.arc(cxPos, cyPos, thickness / 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Kepala Ular Bulat Oval
+        ctx.fillStyle = '#166534';
+        ctx.beginPath();
+        ctx.arc(h.x, h.y, 9.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Sepasang Mata Putih-Hitam Detil
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(h.x - 3, h.y - 2, 3, 0, Math.PI * 2);
+        ctx.arc(h.x + 3, h.y - 2, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#000000';
+        ctx.beginPath();
+        ctx.arc(h.x - 3, h.y - 2, 1.5, 0, Math.PI * 2);
+        ctx.arc(h.x + 3, h.y - 2, 1.5, 0, Math.PI * 2);
+        ctx.fill();
       });
 
-      // Melukis Tangga
+      // 🪜 MELUKIS TANGGA KAYU 3D COKELAT KLASIK
       ctx.shadowBlur = 0;
       Object.entries(LADDERS).forEach(([bottom, top]) => {
         const b = cellToXY(+bottom), t2 = cellToXY(+top);
-        const dx = t2.x - b.x, dy = t2.y - b.y;
-        const len = Math.sqrt(dx*dx + dy*dy);
-        const nx = -dy/len*5, ny = dx/len*5;
-        ctx.shadowColor = '#000'; ctx.shadowBlur = 4;
-        ctx.strokeStyle = '#059669'; // Hijau tua solid mencolok
-        ctx.lineWidth = 3.5; ctx.lineCap = 'round'; ctx.setLineDash([]);
-        ctx.beginPath(); ctx.moveTo(b.x+nx, b.y+ny); ctx.lineTo(t2.x+nx, t2.y+ny); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(b.x-nx, b.y-ny); ctx.lineTo(t2.x-nx, t2.y-ny); ctx.stroke();
-        ctx.strokeStyle = '#34d399'; ctx.lineWidth = 2; ctx.shadowBlur = 0;
-        for (let s = 1; s < 5; s++) {
-          const rx = b.x + dx*s/5, ry = b.y + dy*s/5;
-          ctx.beginPath(); ctx.moveTo(rx+nx*1.8, ry+ny*1.8); ctx.lineTo(rx-nx*1.8, ry-ny*1.8); ctx.stroke();
+        
+        const dx = t2.x - b.x;
+        const dy = t2.y - b.y;
+        const len = Math.sqrt(dx * dx + dy * dy);
+        
+        const nx = -dy / len * 9; 
+        const ny = dx / len * 9;
+
+        ctx.lineCap = 'square';
+        
+        // Tiang Penyangga Kiri & Kanan (Lapisan Bayangan)
+        ctx.strokeStyle = '#451a03'; 
+        ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.moveTo(b.x + nx, b.y + ny); ctx.lineTo(t2.x + nx, t2.y + ny); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(b.x - nx, b.y - ny); ctx.lineTo(t2.x - nx, t2.y - ny); ctx.stroke();
+
+        // Tiang Penyangga Kiri & Kanan (Lapisan Atas/Terang)
+        ctx.strokeStyle = '#78350f'; 
+        ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(b.x + nx, b.y + ny); ctx.lineTo(t2.x + nx, t2.y + ny); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(b.x - nx, b.y - ny); ctx.lineTo(t2.x - nx, t2.y - ny); ctx.stroke();
+
+        // Anak Tangga Horizontal
+        const stepCount = Math.max(4, Math.floor(len / 18));
+        for (let s = 1; s < stepCount; s++) {
+          const ratio = s / stepCount;
+          const rx = b.x + dx * ratio;
+          const ry = b.y + dy * ratio;
+
+          // Efek Bayangan Anak Tangga
+          ctx.strokeStyle = '#451a03';
+          ctx.lineWidth = 3.5;
+          ctx.beginPath();
+          ctx.moveTo(rx + nx * 0.9, ry + ny * 0.9 + 1);
+          ctx.lineTo(rx - nx * 0.9, ry - ny * 0.9 + 1);
+          ctx.stroke();
+
+          // Tekstur Kayu Cerah Anak Tangga
+          ctx.strokeStyle = '#a16207';
+          ctx.beginPath();
+          ctx.moveTo(rx + nx * 0.9, ry + ny * 0.9);
+          ctx.lineTo(rx - nx * 0.9, ry - ny * 0.9);
+          ctx.stroke();
         }
-        ctx.font='18px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText('\uD83E\uDE9C', b.x, b.y);
       });
       ctx.shadowBlur = 0;
 
