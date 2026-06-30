@@ -393,60 +393,133 @@
     .unindra-text { font-size: 11px; line-height: 1.4; color: var(--muted); }
     .unindra-text strong { color: var(--text); font-weight: 700; }
 
-    /* Mobile Responsive Lock Viewport */
+    /* ======================================================== */
+    /* MOBILE RESPONSIVE OPTIMIZATION MODIFIED                  */
+    /* ======================================================== */
     @media (max-width: 720px) {
       body {
-        height: 100vh; height: 100dvh; overflow: hidden;
-        display: flex; flex-direction: column;
+        height: auto; 
+        min-height: 100vh;
+        overflow-y: auto; 
+        display: flex;
+        flex-direction: column;
       }
 
-      header { padding: 8px 12px; flex-shrink: 0; }
-      .header-logo { width: 32px; height: 32px; font-size: 16px; border-radius: 8px; }
-      .header-title { font-size: 14px; }
-      .header-sub { font-size: 9px; margin-top: 0; }
+      header { 
+        padding: 10px 14px; 
+        flex-shrink: 0; 
+      }
+      .header-logo { width: 34px; height: 34px; font-size: 18px; border-radius: 8px; }
+      .header-title { font-size: 15px; }
+      .header-sub { font-size: 10px; margin-top: 0; }
       .header-badges, .theme-toggle { display: none !important; }
 
       main {
-        flex: 1; display: flex; flex-direction: column; padding: 8px; gap: 8px;
-        width: 100%; height: calc(100% - 50px); align-items: center; justify-content: space-between; overflow: hidden;
+        flex: 1; 
+        display: flex; 
+        flex-direction: column; 
+        padding: 12px 8px; 
+        gap: 12px;
+        width: 100%; 
+        height: auto;
+        align-items: center; 
+        justify-content: flex-start;
+        overflow: visible;
       }
 
       #board-section {
-        flex: 1; width: 100%; max-height: 60vh; display: flex; align-items: center;
-        justify-content: center; padding: 6px; background: transparent; border: none; box-shadow: none; overflow: hidden;
+        flex: unset;
+        width: 100%; 
+        max-height: none;
+        display: flex; 
+        align-items: center;
+        justify-content: center; 
+        padding: 8px; 
+        background: var(--card); 
+        border: 1px solid var(--border); 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+        border-radius: 16px;
       }
 
-      canvas#board { max-width: 100%; max-height: 100%; width: auto; height: auto; aspect-ratio: 1/1; object-fit: contain; }
+      canvas#board { 
+        width: 100% !important; 
+        height: auto !important; 
+        aspect-ratio: 1/1; 
+        object-fit: contain; 
+      }
 
       #side {
-        flex: 0 0 auto; width: 100%; display: grid; grid-template-columns: 1fr 80px; gap: 6px;
-        background: var(--surface); padding: 10px; border-radius: 16px; border: 1px solid var(--border);
+        flex: unset; 
+        width: 100%; 
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+        border: none;
       }
 
-      #side .card:nth-child(1), #side .card:nth-child(4), #side .card:nth-child(5), #side .card:nth-child(6), .unindra-info {
-        display: none !important;
+      /* Kembalikan fungsionalitas display card di mobile */
+      #side .card:nth-child(1), 
+      #side .card:nth-child(4), 
+      #side .card:nth-child(5), 
+      #side .card:nth-child(6) {
+        display: block !important;
       }
 
-      #side .card:nth-child(3) {
-        grid-column: 1; grid-row: 1; padding: 8px; border-radius: 10px; min-height: unset;
-        display: flex; align-items: center; background: transparent; border: none; box-shadow: none;
+      /* Paksa info Unindra agar tampil di mobile */
+      .unindra-info, #side .unindra-info {
+        display: flex !important;
+        margin-top: 8px;
+        background: var(--surface);
       }
-      #msg-box { font-size: 12px; line-height: 1.4; min-height: unset; }
 
-      #side .card:nth-child(2) {
-        grid-column: 2; grid-row: 1 / span 2; padding: 4px; display: flex; flex-direction: column;
-        align-items: center; justify-content: center; border-radius: 12px; background: var(--card);
+      /* Penyesuaian layout Status & Dadu agar compact berjejer */
+      .mobile-status-row {
+        display: grid;
+        grid-template-columns: 1fr 90px;
+        gap: 10px;
+        width: 100%;
       }
-      #dice-display { font-size: 38px; padding: 0; }
 
-      #roll-btn { grid-column: 1; grid-row: 2; padding: 10px; font-size: 13px; border-radius: 10px; }
-      #side > .btn-ghost { display: none !important; }
+      #side .card:nth-child(2) { /* Dice Card */
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      #dice-display { font-size: 42px; padding: 0; }
 
+      #side .card:nth-child(3) { /* Status Card */
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      #msg-box { font-size: 13px; line-height: 1.5; min-height: unset; }
+
+      /* Tombol Utama */
+      #roll-btn { 
+        padding: 14px; 
+        font-size: 14px; 
+        border-radius: 12px; 
+        width: 100%;
+        box-shadow: 0 4px 15px rgba(124,58,237,0.3);
+      }
+      #side > .btn-ghost { 
+        display: block !important; 
+        padding: 12px;
+      }
+
+      /* Modal Pertanyaan */
       #q-box { max-width: 95%; border-radius: 18px; }
-      #q-header { padding: 12px 16px; }
-      #q-body { padding: 0 16px 16px; }
-      #q-text { font-size: 14px; margin-bottom: 12px; }
-      .q-choice { padding: 10px 12px; font-size: 12px; }
+      #q-header { padding: 14px 18px; }
+      #q-body { padding: 0 18px 18px; }
+      #q-text { font-size: 15px; margin-bottom: 14px; }
+      .q-choice { padding: 12px; font-size: 13px; }
     }
   </style>
 </head>
@@ -528,14 +601,16 @@
         <div id="player-list"></div>
       </div>
 
-      <div class="card">
-        <div class="card-label">Dadu</div>
-        <div id="dice-display">🎲</div>
-      </div>
+      <div class="mobile-status-row">
+        <div class="card">
+          <div class="card-label">Status</div>
+          <div id="msg-box">Silakan mulai permainan!</div>
+        </div>
 
-      <div class="card">
-        <div class="card-label">Status</div>
-        <div id="msg-box">Silakan mulai permainan!</div>
+        <div class="card">
+          <div class="card-label">Dadu</div>
+          <div id="dice-display">🎲</div>
+        </div>
       </div>
 
       <button class="btn btn-primary" id="roll-btn" onclick="rollDice()">🎲 Lempar Dadu (Pemain 1)</button>
@@ -554,11 +629,11 @@
 
       <div class="card card--howto">
         <div class="card-label">Cara Main</div>
-        🎲 Lempar dadu → kotak dipilih<br>
+        🎲 Lempar dadu &rarr; kotak dipilih<br>
         ❓ Jawab pertanyaan mata pelajaran acak<br>
-        ✅ <strong class="howto-em">Benar</strong> → Maju ke posisi baru<br>
-        ❌ <strong class="howto-em">Salah</strong> → Tetap di posisi semula<br>
-        🐍 Ular → turun | 🪜 Tangga → naik
+        ✅ <strong class="howto-em">Benar</strong> &rarr; Maju ke posisi baru<br>
+        ❌ <strong class="howto-em">Salah</strong> &rarr; Tetap di posisi semula<br>
+        🐍 Ular &rarr; turun | 🪜 Tangga &rarr; naik
       </div>
 
       <div class="card">
@@ -566,13 +641,13 @@
         <div id="score-table"></div>
       </div>
 
-      <div class="unindra-info" style="margin-top: auto;">
+      <div class="unindra-info">
         <img src="unindra.jpg" alt="Logo Unindra" class="unindra-logo-png">
         <div class="unindra-text">
           <strong>Tugas Aplikasi Game</strong><br>
           Mata Kuliah Pemrograman<br>
-          Teknik Informatika <br>
-          <strong>UNINDRA</strong>
+          Teknik Informatika (TI)<br>
+          Universitas IndraPrasta <strong>UNINDRA</strong>
         </div>
       </div>
     </aside>
